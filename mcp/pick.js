@@ -174,3 +174,61 @@ export function readConfirmation(url) {
   if (wire?.v !== 1 || !Number.isFinite(wire.t) || !(wire.d >= 5 && wire.d <= 480)) throw new Error("The confirmation is not in a format this server understands.");
   return { name: cleanName(wire.n), forName: cleanName(wire.f), timeZone: validZone(wire.z) || "UTC", meetingMinutes: wire.d, start: new Date(wire.t * 60000).toISOString() };
 }
+
+function parseStretches(list, label) {
+  if (!Array.isArray(list) || !list.length) throw new Error(`${label} needs at least one { start, end }.`);
+  return list.map((ft, i) => {
+    const s = Date.parse(ft?.start), e = Date.parse(ft?.end);
+    if (Number.isNaN(s) || Number.isNaN(e) || !/(Z|[+-]\d\d:?\d\d)$/i.test(String(ft.start).trim()) || !/(Z|[+-]\d\d:?\d\d)$/i.test(String(ft.end).trim())) {
+      throw new Error(`${label} #${i + 1}: give start and end as ISO 8601 times with an offset or Z.`);
+    }
+    return { start: s, end: e };
+  });
+}
+
+/// Answers a pick-a-time link on someone's behalf: up to five of the link's
+/// meeting times, as the lulls.app/reply link the page itself would make.
+export function createReply({ url, picks, name = null, timeZone = "UTC" }, now = Date.now()) {
+  const link = readLink(url, now);
+  if (!Array.isArray(picks) || !picks.length) throw new Error("picks needs at least one start time from the link.");
+  const offered = new Set(link.choices.map((c) => Date.parse(c)));
+  const chosen = [];
+  for (const [i, p] of picks.entries()) {
+    const t = Date.parse(p);
+    if (Number.isNaN(t) || !/(Z|[+-]\d\d:?\d\d)$/i.test(String(p).trim())) throw new Error(`picks #${i + 1}: give an ISO 8601 time with an offset or Z.`);
+    if (!offered.has(t)) throw new Error(`picks #${i + 1} (${p}) is not one of the link's times; use read_pick_link or find_common_times to list them.`);
+    if (!chosen.includes(t)) chosen.push(t);
+  }
+  if (chosen.length > MAX_PICKS) throw new Error(`Pick at most ${MAX_PICKS} times.`);
+  chosen.sort((a, b) => a - b);
+  const wire = { v: 1, z: validZone(timeZone) || "UTC", d: link.meetingMinutes, p: chosen.map((t) => Math.round(t / 60000)) };
+  const n = cleanName(name);
+  if (n) wire.n = n;
+  if (link.name) wire.f = link.name;
+  return { url: `https://${HOST}${REPLY_PATH}#` + base64url(new TextEncoder().encode(JSON.stringify(wire))), picks: chosen.map((t) => new Date(t).toISOString()), meetingMinutes: link.meetingMinutes, forName: link.name };
+}
+
+/// The meeting times that suit both sides: the times on offer (from a pick
+/// link, or the other person's free stretches) that fit wholly inside the
+/// user's own free stretches.
+export function findCommonTimes({ url = null, theirFreeTimes = null, meetingMinutes = null, myFreeTimes }, now = Date.now()) {
+  const mine = parseStretches(myFreeTimes, "my_free_times");
+  let d, offered, name = null;
+  if (url) {
+    const link = readLink(url, now);
+    d = link.meetingMinutes;
+    offered = link.choices.map((c) => Date.parse(c));
+    name = link.name;
+  } else {
+    d = Math.round(Number(meetingMinutes ?? 30));
+    if (!(d >= 5 && d <= 480)) throw new Error("meeting_minutes must be between 5 and 480.");
+    const step = Math.min(d, 30) * 60000;
+    offered = [];
+    for (const s of parseStretches(theirFreeTimes, "their_free_times")) {
+      for (let t = Math.ceil(s.start / step) * step; t + d * 60000 <= s.end; t += step) if (t >= now) offered.push(t);
+    }
+  }
+  const len = d * 60000;
+  const common = [...new Set(offered)].filter((t) => mine.some((m) => t >= m.start && t + len <= m.end)).sort((a, b) => a - b);
+  return { meetingMinutes: d, name, offered: offered.length, common: common.map((t) => new Date(t).toISOString()) };
+}

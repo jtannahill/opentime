@@ -2,11 +2,11 @@
 // links. No sessions, no storage, no calendar access: every answer is
 // computed from the request alone.
 
-import { createLink, readLink, readReply, createConfirmation, readConfirmation, describeChoices, REPLY_PATH, CONFIRM_PATH } from "./pick.js";
+import { createLink, readLink, readReply, createConfirmation, readConfirmation, createReply, findCommonTimes, describeChoices, REPLY_PATH, CONFIRM_PATH } from "./pick.js";
 
 export const PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"];
 
-const SERVER_INFO = { name: "open-time-pick", title: "Open Time pick-a-time links", version: "1.2.0" };
+const SERVER_INFO = { name: "open-time-pick", title: "Open Time pick-a-time links", version: "1.3.0" };
 
 const INSTRUCTIONS =
   "Open Time pick-a-time links let someone choose up to five meeting times from a set of free times and send them back as a lulls.app/reply link. " +
@@ -16,6 +16,8 @@ const INSTRUCTIONS =
   "or a lulls.app/reply link, to see which times they picked. " +
   "After reading a reply, ask the user which time they want if there is more than one. Then, if you have calendar tools, offer to create the event and invite the other person; " +
   "either way, offer create_confirmation_link so the user can send them a link that adds the meeting to their calendar in one tap. " +
+  "When someone sends the user a lulls.app/pick link, use find_common_times with the user's free time (from their calendar tools or what they told you) " +
+  "to see which of its times suit both sides, let the user choose, then use create_reply_link to answer with up to five of them. " +
   "The times travel inside the link; this server stores nothing and cannot see anyone's calendar.";
 
 export const TOOLS = [
@@ -85,6 +87,43 @@ export const TOOLS = [
     },
     annotations: { readOnlyHint: true, openWorldHint: false, idempotentHint: true },
   },
+  {
+    name: "find_common_times",
+    title: "Find times that suit both sides",
+    description:
+      "List the meeting times that fit both people: the times offered in a lulls.app/pick link (or the other person's free stretches) " +
+      "that lie wholly inside the user's own free stretches. Give the user's free time as ISO 8601 stretches with an offset or Z.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        url: { type: "string", description: "A lulls.app/pick link someone sent, including everything after #. Use this or their_free_times." },
+        their_free_times: { type: "array", description: "The other person's free stretches, if there is no link: [{\"start\",\"end\"}] in ISO 8601.", items: { type: "object", properties: { start: { type: "string" }, end: { type: "string" } }, required: ["start", "end"] } },
+        meeting_minutes: { type: "integer", minimum: 5, maximum: 480, description: "Meeting length when using their_free_times. A link carries its own." },
+        my_free_times: { type: "array", minItems: 1, description: "The user's free stretches: [{\"start\",\"end\"}] in ISO 8601 with an offset or Z.", items: { type: "object", properties: { start: { type: "string" }, end: { type: "string" } }, required: ["start", "end"] } },
+        time_zone: { type: "string", description: "IANA time zone to show the times in." },
+      },
+      required: ["my_free_times"],
+    },
+    annotations: { readOnlyHint: true, openWorldHint: false, idempotentHint: true },
+  },
+  {
+    name: "create_reply_link",
+    title: "Answer a pick-a-time link",
+    description:
+      "Answer a lulls.app/pick link someone sent the user: choose up to five of its meeting times and get the lulls.app/reply link to send back, " +
+      "exactly as the link page would make it. Each pick must be one of the link's times (see read_pick_link or find_common_times).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        url: { type: "string", description: "The lulls.app/pick link, including everything after #." },
+        picks: { type: "array", minItems: 1, maxItems: 5, items: { type: "string" }, description: "Up to five meeting start times from the link, ISO 8601 with an offset or Z." },
+        name: { type: "string", maxLength: 40, description: "Optional first name of the user, shown to the sender." },
+        time_zone: { type: "string", description: "IANA time zone of the user, shown to the sender as a hint." },
+      },
+      required: ["url", "picks"],
+    },
+    annotations: { readOnlyHint: true, openWorldHint: false, idempotentHint: true },
+  },
 ];
 
 function isConfirmation(url) {
@@ -118,6 +157,30 @@ export function callTool(name, args = {}, now = Date.now()) {
           "Send it as is; everything after # is needed. The recipient picks up to five times in their own time zone and can send them back as a lulls.app/reply link." +
           (notes.length ? "\n\n" + notes.join(" ") : ""),
         { url: r.url, free_stretches: r.slots, skipped: r.skipped },
+      );
+    }
+    if (name === "find_common_times") {
+      const r = findCommonTimes({
+        url: args.url ?? null,
+        theirFreeTimes: args.their_free_times ?? null,
+        meetingMinutes: args.meeting_minutes ?? null,
+        myFreeTimes: args.my_free_times,
+      }, now);
+      const zone = args.time_zone || "UTC";
+      const body = r.common.length
+        ? describeChoices(r.common, r.meetingMinutes, zone)
+        : "None of the times on offer fit the free time given. Ask for a fresh link or other days.";
+      return text(
+        `${r.common.length} of ${r.offered} ${r.meetingMinutes}-minute time${r.offered === 1 ? "" : "s"} suit both sides (shown in ${zone}):\n${body}`,
+        { meeting_minutes: r.meetingMinutes, offered: r.offered, common: r.common, name: r.name },
+      );
+    }
+    if (name === "create_reply_link") {
+      const r = createReply({ url: args.url, picks: args.picks, name: args.name ?? null, timeZone: args.time_zone ?? "UTC" }, now);
+      return text(
+        `Reply link with ${r.picks.length} time${r.picks.length === 1 ? "" : "s"}${r.forName ? ` for ${r.forName}` : ""}:\n${r.url}\n\n` +
+          "Send it back as is; everything after # is needed. It opens in OpenTime or any browser, with a button to confirm each time.",
+        { url: r.url, picks: r.picks, meeting_minutes: r.meetingMinutes },
       );
     }
     if (name === "create_confirmation_link") {

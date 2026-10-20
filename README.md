@@ -22,29 +22,22 @@ No more typing a list of times into a message that goes stale the moment either 
 
 [Watch the one-minute recording](https://lulls.app/img/claude-mcp.mp4): a real session in Claude, sped up. OpenTime goes in as a custom connector, Claude makes a link for Maya, Maya picks three times on the link page, and Claude reads her reply back.
 
-If your assistant can see your calendar, like Claude with Google Calendar connected, it can find the gaps and send the link for you. **Make a link** from free time it already knows, ready to paste into a message or an email. **Read one back:** paste a link or a reply someone sent you and it lists the times in your time zone, or checks them against your calendar. The server stores nothing and never sees your calendar: the assistant hands it only the free times.
+If your assistant can see your calendar, like Claude with Google Calendar connected, it can find the gaps and send the link for you. **Make a link** from free time it already knows, ready to paste into a message or an email. **Read one back:** paste a link or a reply someone sent you and it lists the times in your time zone. **Answer one:** it finds the times that suit you both and makes the reply. **Confirm it:** it makes the link that puts the meeting on their calendar. The server stores nothing and never sees your calendar: the assistant hands it only the free times.
 
 **Claude:** Settings, then Connectors, then add a custom connector with the URL `https://lulls.app/mcp`.
 
-**Cursor:** add it to `~/.cursor/mcp.json`:
+**Cursor:** one click installs it.
 
-```json
-{
-  "mcpServers": {
-    "opentime": { "url": "https://lulls.app/mcp" }
-  }
-}
-```
+<a href="cursor://anysphere.cursor-deeplink/mcp/install?name=OpenTime&config=eyJ1cmwiOiJodHRwczovL2x1bGxzLmFwcC9tY3AifQ%3D%3D"><img src="docs/img/add-to-cursor.svg" alt="Add OpenTime to Cursor" height="32"></a>
 
-**Grok:** in the xAI API, pass it as a remote MCP tool:
+**Grok Bot:** ask it to use `https://lulls.app/mcp`; it offers to add it as a custom connector, then makes the link.
 
-```json
-"tools": [{
-  "type": "mcp",
-  "server_label": "opentime",
-  "server_url": "https://lulls.app/mcp"
-}]
-```
+<p>
+  <a href="https://lulls.app/img/cursor-mcp.mp4"><img src=".github/readme/cursor-mcp.jpg" width="48%" alt="Cursor's agent making Maya a pick-a-time link with OpenTime"></a>
+  <a href="https://lulls.app/img/grok-mcp.mp4"><img src=".github/readme/grok-mcp.jpg" width="48%" alt="Grok Bot making Maya's confirmation link with OpenTime"></a>
+</p>
+
+Recordings of real sessions: [Cursor](https://lulls.app/img/cursor-mcp.mp4) and [Grok Bot](https://lulls.app/img/grok-mcp.mp4).
 
 Any other assistant or agent that speaks MCP over HTTP can use the same URL. There is no sign-in and no key.
 

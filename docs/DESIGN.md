@@ -26,7 +26,7 @@ On this site, the pick-a-time link, with the free times living inside it, become
 
 ## Typography
 
-System faces only (SF Pro Display for headings, SF Pro Text for body); no web fonts. Sizes are in rem so they follow the reader's text size. Display headline `clamp(2.9rem, 6.2vw, 5.25rem)`, section headings `clamp(2rem, 4.2vw, 3.5rem)`, both with -0.035em tracking and leading near 1. Body 1.125rem at 1.55 leading, measure capped near 62ch. Every heading fits in two lines at every width. No small uppercase labels, no monospace except the real MCP URL and the real Cursor and Grok config snippets, no numbering.
+System faces only (SF Pro Display for headings, SF Pro Text for body); no web fonts. Sizes are in rem so they follow the reader's text size. Display headline `clamp(2.9rem, 6.2vw, 5.25rem)`, section headings `clamp(2rem, 4.2vw, 3.5rem)`, both with -0.035em tracking and leading near 1. Body 1.125rem at 1.55 leading, measure capped near 62ch. Every heading fits in two lines at every width. No small uppercase labels, no monospace except the real MCP URL, no numbering.
 
 ## Layout
 
@@ -34,7 +34,7 @@ One 1240px column with a fluid gutter. Sections are separated by large vertical 
 
 ## Imagery
 
-Real app screens only: the week with busy events, the Calendars sheet, the link sheet, a looping clip of the pick, and a recorded Claude session for the assistant section (`/img/claude-mcp.mp4`, captions burned in like the pick clip). Both play only while visible, have a Pause button and stay still under Reduce Motion. Phone screenshots keep rounded corners; nothing else is rounded except pill buttons. The App Store badge is shown exactly as Apple supplies it, with no hover or press effect.
+Real app screens only: the week with busy events, the Calendars sheet, the link sheet, a looping clip of the pick, and recorded sessions in Claude, Cursor and Grok Bot for the assistant section (`/img/{claude,cursor,grok}-mcp.mp4`, captions burned in like the pick clip), switched by a pill segmented control (one frame, three tabs, arrow keys move between them). Cursor's official Add to Cursor badge is used as Cursor supplies it. Both play only while visible, have a Pause button and stay still under Reduce Motion. Phone screenshots keep rounded corners; nothing else is rounded except pill buttons. The App Store badge is shown exactly as Apple supplies it, with no hover or press effect.
 
 ## Components
 

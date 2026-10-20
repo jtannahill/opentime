@@ -14,7 +14,7 @@ A reply (`https://lulls.app/reply#...`, `PickReply` in the same file) carries on
 
 A confirmation (`https://lulls.app/confirmed#...`, `ConfirmLink` in the same file) carries one agreed start time, the meeting length, both first names and the confirmer's time zone. `docs/confirmed.html` shows it in the reader's time zone with Add to Calendar (.ics), Google Calendar and Outlook buttons. The app's "Send confirmation" and the reply page's "Confirm this time" include it; "Confirm and invite" opens the system new-event sheet (`EventEditSheet`), so the user's own calendar account sends the invitation.
 
-The MCP server is a Pages Function (`functions/mcp.js`, logic in `mcp/`) with three tools, `create_pick_link`, `read_pick_link` and `create_confirmation_link`. `mcp/pick.js` mirrors the Swift wire format; `node --test mcp/test/pick.test.js` and the Swift `PickLinkTests` check both directions.
+The MCP server is a Pages Function (`functions/mcp.js`, logic in `mcp/`) with five tools: `create_pick_link`, `read_pick_link`, `find_common_times`, `create_reply_link` and `create_confirmation_link`. `mcp/pick.js` mirrors the Swift wire format; `node --test mcp/test/pick.test.js` and the Swift `PickLinkTests` check both directions.
 
 ## Simulator screenshots and recordings
 

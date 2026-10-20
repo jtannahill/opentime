@@ -60,7 +60,7 @@ test("MCP: initialize, list, call, and notifications", () => {
   assert.ok(init.result.capabilities.tools);
   assert.equal(handleMessage({ jsonrpc: "2.0", method: "notifications/initialized" }), null);
   const list = handleMessage({ jsonrpc: "2.0", id: 2, method: "tools/list" });
-  assert.deepEqual(list.result.tools.map((t) => t.name), ["create_pick_link", "read_pick_link", "create_confirmation_link"]);
+  assert.deepEqual(list.result.tools.map((t) => t.name), ["create_pick_link", "read_pick_link", "create_confirmation_link", "find_common_times", "create_reply_link"]);
   const made = handleMessage({ jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "create_pick_link", arguments: {
     free_times: [{ start: "2026-10-21T14:00:00Z", end: "2026-10-21T15:00:00Z" }], meeting_minutes: 30 } } }, NOW);
   assert.equal(made.result.isError, false);
@@ -106,4 +106,46 @@ test("a confirmation link round-trips and reads through the tool", async () => {
   const read = callTool("read_pick_link", { url: c.url });
   assert.equal(read.structuredContent.kind, "confirmation");
   assert.throws(() => createConfirmation({ start: "2026-10-27T10:30:00" }), /offset/);
+});
+
+test("a full exchange through the tools: link, overlap, reply, read, confirm", async () => {
+  const { callTool } = await import("../server.js");
+  const link = callTool("create_pick_link", {
+    free_times: [
+      { start: "2026-10-27T10:00:00-04:00", end: "2026-10-27T12:00:00-04:00" },
+      { start: "2026-10-28T14:00:00-04:00", end: "2026-10-28T16:30:00-04:00" },
+    ],
+    meeting_minutes: 30, name: "Jamie", time_zone: "America/New_York",
+  }, NOW).structuredContent.url;
+  // Maya (Central) is free 9:00-10:00 her time on the 27th and 2:00-3:00 on the 28th.
+  const common = callTool("find_common_times", {
+    url: link,
+    my_free_times: [
+      { start: "2026-10-27T09:00:00-05:00", end: "2026-10-27T10:00:00-05:00" },
+      { start: "2026-10-28T14:00:00-05:00", end: "2026-10-28T15:00:00-05:00" },
+    ],
+    time_zone: "America/Chicago",
+  }, NOW);
+  assert.equal(common.isError, false);
+  // 27th: 10:00, 10:30 ET fit inside 9-10 CT (= 10-11 ET); 28th: 15:00, 15:30 ET fit inside 2-3 CT (= 3-4 ET).
+  assert.deepEqual(common.structuredContent.common, [
+    "2026-10-27T14:00:00.000Z", "2026-10-27T14:30:00.000Z", "2026-10-28T19:00:00.000Z", "2026-10-28T19:30:00.000Z",
+  ]);
+  const reply = callTool("create_reply_link", {
+    url: link, picks: ["2026-10-27T09:30:00-05:00", "2026-10-28T14:00:00-05:00"], name: "Maya", time_zone: "America/Chicago",
+  }, NOW);
+  assert.equal(reply.isError, false);
+  const read = callTool("read_pick_link", { url: reply.structuredContent.url }, NOW);
+  assert.equal(read.structuredContent.name, "Maya");
+  assert.equal(read.structuredContent.for_name, "Jamie");
+  assert.deepEqual(read.structuredContent.picks, ["2026-10-27T14:30:00.000Z", "2026-10-28T19:00:00.000Z"]);
+  const bad = callTool("create_reply_link", { url: link, picks: ["2026-10-27T13:00:00-04:00"] }, NOW);
+  assert.equal(bad.isError, true);
+  assert.match(bad.content[0].text, /not one of the link's times/);
+  const fromStretches = callTool("find_common_times", {
+    their_free_times: [{ start: "2026-10-27T10:00:00-04:00", end: "2026-10-27T11:00:00-04:00" }],
+    meeting_minutes: 60,
+    my_free_times: [{ start: "2026-10-27T09:00:00-05:00", end: "2026-10-27T11:00:00-05:00" }],
+  }, NOW);
+  assert.deepEqual(fromStretches.structuredContent.common, ["2026-10-27T14:00:00.000Z"]);
 });

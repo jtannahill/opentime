@@ -235,28 +235,32 @@
   .pair figcaption { margin-top: 20px; max-width: 34ch; }
   .pair figcaption strong { display: block; font-size: 1.25rem; margin-bottom: 4px; }
 
-  /* Assistant: the pitch and the connector beside an example conversation on a field. */
+  /* Assistant: the pitch beside one frame that switches between real sessions in Claude, Cursor and Grok Bot. */
   .assist .wrap { display: grid; gap: 56px; }
-  @media (min-width: 1000px) { .assist .wrap { grid-template-columns: 1fr 1fr; align-items: center; gap: 80px; } }
+  @media (min-width: 1000px) { .assist .wrap { grid-template-columns: 1fr 1.05fr; align-items: center; gap: 80px; } }
   .assist h2 + p { margin-top: 28px; }
-  .connect { margin-top: 36px; display: grid; gap: 14px; }
-  .copy-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
-  .copy-row code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 1.125rem; color: var(--text); background: var(--field); padding: 12px 16px; border-radius: 12px; }
+  .tools { margin-top: 36px; display: grid; gap: 22px; }
+  .tools strong { display: block; font-size: 1.25rem; margin-bottom: 2px; letter-spacing: -0.01em; }
+  .tools + .small { margin-top: 28px; max-width: 46ch; }
+  .seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--field); }
+  .seg button {
+    min-height: 40px; padding: 0 18px; border: 0; border-radius: 999px; cursor: pointer;
+    font: 600 0.9375rem/1 inherit; font-family: inherit; color: var(--text-2); background: transparent;
+    transition: background-color 160ms ease, color 160ms ease;
+  }
+  .seg button[aria-selected="true"] { background: var(--text); color: var(--bg); }
+  @media (hover: hover) and (pointer: fine) { .seg button[aria-selected="false"]:hover { color: var(--text); } }
+  .panel { margin-top: 16px; }
+  .panel video { display: block; width: 100%; height: auto; border-radius: 20px; background: #141414; }
+  .setup { margin-top: 18px; display: grid; gap: 12px; }
+  .setup p { max-width: 54ch; }
+  .setup code, .copy-row code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.95em; color: var(--text); }
+  .copy-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .copy-row code { background: var(--field); padding: 11px 15px; border-radius: 12px; font-size: 1rem; }
   .copy-row .go { border: 0; font: inherit; font-weight: 650; cursor: pointer; }
-  .tools { margin-top: 40px; display: grid; gap: 24px; }
-  @media (min-width: 640px) { .tools { grid-template-columns: 1fr 1fr; gap: 32px; } }
-  .tools strong, .connect strong { display: block; font-size: 1.25rem; margin-bottom: 4px; letter-spacing: -0.01em; }
-  .demo video { display: block; width: 100%; height: auto; border-radius: 20px; background: #1b1b1b; }
-  .demo figcaption { margin-top: 14px; max-width: 52ch; }
-  .elsewhere { grid-column: 1 / -1; margin-top: 24px; }
-  .clients { display: grid; gap: 28px; margin-top: 24px; }
-  @media (min-width: 900px) { .clients { grid-template-columns: 1fr 1fr; gap: 48px; } }
-  .anything { margin-top: 28px; }
-  .anything code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.95em; }
-  .clients strong { display: block; font-size: 1.25rem; margin-bottom: 4px; letter-spacing: -0.01em; }
-  .clients code, .connect code { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
-  .clients p code { font-size: 0.95em; }
-  .clients pre { margin-top: 14px; background: var(--field); padding: 16px 18px; border-radius: 12px; font-size: 0.875rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .copy-row .clip-toggle { margin-top: 0; margin-left: auto; }
+  .badge-cursor { display: inline-block; line-height: 0; }
+  .badge-cursor img { height: 40px; width: auto; }
 
   /* Everywhere: a plain two-column list, no numbers. */
   .everywhere .wrap { display: grid; gap: 48px; }
@@ -391,46 +395,41 @@
     <div class="wrap">
       <div>
         <h2 id="assist-title" class="rise">Or ask your assistant.</h2>
-        <p class="rise" style="--d:80ms">If your assistant can see your calendar, like Claude with Google Calendar connected, it can find the gaps and send the link for you. Add OpenTime once, then ask in plain words.</p>
-        <div class="connect rise" style="--d:120ms">
-          <p>In Claude, open Settings, then Connectors, and add a custom connector with this URL:</p>
-          <div class="copy-row">
-            <code id="mcp-url">https://lulls.app/mcp</code>
-            <button type="button" class="go" id="copy-mcp">Copy</button>
-          </div>
-          <p class="small">It works with any assistant that supports MCP. It stores nothing and never sees your calendar: the assistant hands it only the free times.</p>
-        </div>
+        <p class="rise" style="--d:80ms">If your assistant can see your calendar, it can find the gaps and send the link for you. Add OpenTime once, then ask in plain words.</p>
         <div class="tools">
-          <p class="rise" style="--d:160ms"><strong>Make a link</strong>From free time your assistant already knows, ready to paste into a message or an email.</p>
-          <p class="rise" style="--d:200ms"><strong>Read one back</strong>Paste a link or a reply someone sent you and it lists the times in your time zone, or checks them against your calendar.</p>
+          <p class="rise" style="--d:120ms"><strong>Make a link</strong>From free time your assistant already knows, ready to paste into a message or an email.</p>
+          <p class="rise" style="--d:160ms"><strong>Read the reply</strong>Paste what they send back and it lists their picks in your time zone.</p>
+          <p class="rise" style="--d:200ms"><strong>Confirm it</strong>Pick one and it makes the link that puts the meeting on their calendar.</p>
         </div>
+        <p class="small rise" style="--d:240ms">Any assistant that speaks MCP can use it, with no sign-in and no key. It stores nothing and never sees your calendar.</p>
       </div>
-      <figure class="demo rise" style="--d:100ms">
-        <video src="/img/claude-mcp.mp4" poster="/img/claude-mcp.jpg" muted loop playsinline preload="none" width="1080" height="1076" data-toggle="demo-toggle" aria-label="A real session in Claude, sped up: adding OpenTime as a custom connector, asking for a pick-a-time link for Maya, Maya choosing three times on the link page, and Claude reading her reply"></video>
-        <button type="button" class="clip-toggle" id="demo-toggle" hidden>Pause</button>
-        <figcaption class="small">A real session in Claude, sped up: adding the connector, asking for a link, Maya picking her times, and Claude reading her reply.</figcaption>
-      </figure>
-      <div class="elsewhere rise">
-        <h3>In Cursor, Grok and other assistants</h3>
-        <div class="clients">
-          <div>
-            <p><strong>Cursor</strong>Add it to <code>~/.cursor/mcp.json</code>:</p>
-            <pre><code>{
-  "mcpServers": {
-    "opentime": { "url": "https://lulls.app/mcp" }
-  }
-}</code></pre>
-          </div>
-          <div>
-            <p><strong>Grok</strong>In the xAI API, pass it as a remote MCP tool:</p>
-            <pre><code>"tools": [{
-  "type": "mcp",
-  "server_label": "opentime",
-  "server_url": "https://lulls.app/mcp"
-}]</code></pre>
+      <div class="assistants rise" style="--d:100ms">
+        <div class="seg" role="tablist" aria-label="Assistant">
+          <button type="button" role="tab" id="tab-claude" aria-selected="true" aria-controls="panel-claude">Claude</button>
+          <button type="button" role="tab" id="tab-cursor" aria-selected="false" aria-controls="panel-cursor" tabindex="-1">Cursor</button>
+          <button type="button" role="tab" id="tab-grok" aria-selected="false" aria-controls="panel-grok" tabindex="-1">Grok Bot</button>
+        </div>
+        <div class="panel" id="panel-claude" role="tabpanel" aria-labelledby="tab-claude">
+          <video src="/img/claude-mcp.mp4" poster="/img/claude-mcp.jpg" muted loop playsinline preload="none" width="1080" height="1076" data-toggle="t-claude" aria-label="A real session in Claude, sped up: adding OpenTime as a custom connector, asking for a pick-a-time link for Maya, Maya choosing three times, and Claude reading her reply"></video>
+          <div class="setup">
+            <p>In Claude, open Settings, then Connectors, and add a custom connector:</p>
+            <div class="copy-row"><code>https://lulls.app/mcp</code><button type="button" class="go" id="copy-mcp">Copy</button><button type="button" class="clip-toggle" id="t-claude" hidden>Pause</button></div>
           </div>
         </div>
-        <p class="anything">Any other assistant or agent that speaks MCP over HTTP can use <code>https://lulls.app/mcp</code> the same way. There is no sign-in and no key.</p>
+        <div class="panel" id="panel-cursor" role="tabpanel" aria-labelledby="tab-cursor" hidden>
+          <video src="/img/cursor-mcp.mp4" poster="/img/cursor-mcp.jpg" muted loop playsinline preload="none" width="1080" height="1076" data-toggle="t-cursor" aria-label="A real session in Cursor, sped up: installing OpenTime from an Add to Cursor link and asking Cursor's agent for a pick-a-time link for Maya"></video>
+          <div class="setup">
+            <p>One click installs it in Cursor. Then ask its agent for a link.</p>
+            <div class="copy-row"><a class="badge-cursor" href="cursor://anysphere.cursor-deeplink/mcp/install?name=OpenTime&amp;config=eyJ1cmwiOiJodHRwczovL2x1bGxzLmFwcC9tY3AifQ%3D%3D"><img src="/img/add-to-cursor.svg" alt="Add OpenTime to Cursor" width="144" height="32"></a><button type="button" class="clip-toggle" id="t-cursor" hidden>Pause</button></div>
+          </div>
+        </div>
+        <div class="panel" id="panel-grok" role="tabpanel" aria-labelledby="tab-grok" hidden>
+          <video src="/img/grok-mcp.mp4" poster="/img/grok-mcp.jpg" muted loop playsinline preload="none" width="1080" height="1076" data-toggle="t-grok" aria-label="A real session in Grok Bot, sped up: Grok Bot adding OpenTime as a custom connector, making a pick-a-time link, reading Maya's reply and making her confirmation link"></video>
+          <div class="setup">
+            <p>Ask Grok Bot to use <code>https://lulls.app/mcp</code>. It offers to add it as a custom connector, then makes the link.</p>
+            <div class="copy-row"><button type="button" class="clip-toggle" id="t-grok" hidden>Pause</button></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -544,6 +543,26 @@
   }
   update();
 
+  // Assistant tabs: one frame, three real sessions. Arrow keys move between tabs.
+  var tabs = [].slice.call(document.querySelectorAll('.seg [role="tab"]'));
+  function choose(tab, focus) {
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+    });
+    if (focus) tab.focus();
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener("click", function () { choose(t); });
+    t.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        e.preventDefault();
+        choose(tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length], true);
+      }
+    });
+  });
   var copy = document.getElementById("copy-mcp");
   if (copy && navigator.clipboard) {
     copy.addEventListener("click", function () {
