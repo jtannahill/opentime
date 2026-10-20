@@ -1,0 +1,26 @@
+Quickly see when you're free. Open Time reads your device calendars and shows your open time slots. No accounts, no servers, no tracking.
+
+FEATURES
+- View free and busy slots for today, tomorrow, or any date range
+- Choose which calendars count: exclude holidays, sports schedules, or shared calendars, and every list, widget, and share reflects only the calendars you pick
+- Slot duration picker (15, 30, or 60 minutes). Chips subdivide your free blocks at the chosen interval
+- Long-press any chip for Open in Calendar, Create Event Here, or Copy Time
+- Long-press any day name to Share or Copy that day's availability to anywhere (Messages, Mail, Notes)
+- Light, dark, or system appearance with an in-app picker
+- Pull to refresh, and availability refreshes automatically after you create or edit an event
+- Show or hide busy events
+- Toggle weekends on or off
+- This Week, Next Week, and Next 14 Days quick picks
+- Custom date range picker
+- Home screen widgets (small and medium). Tap any chip to jump straight to that slot in the app
+- Live Activities and Dynamic Island for real-time free/busy on your lock screen
+- Apple Intelligence query bar on supported devices: type "tomorrow afternoon for 30 min" or "any hour Friday afternoon" and get the matching slots
+- Siri and Shortcuts: try "What's my availability in Open Time" or "When am I free in Open Time"
+- Apple Watch companion to check your week from your wrist
+- Share Extension to drop your availability into any app from the share sheet
+- iMessage app to pick days and send your availability without leaving the conversation
+
+PRIVACY FIRST
+Your calendar data stays on your device. No accounts. No analytics. No third-party servers. Zero data collection.
+Open Time uses Apple's EventKit to read your calendars locally. Nothing ever leaves your device.
+Perfect for freelancers, consultants, and anyone who needs to quickly share when they're available.

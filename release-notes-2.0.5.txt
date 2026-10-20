@@ -1,0 +1,9 @@
+Promotional text (159/170 chars):
+
+New: choose which calendars count. Exclude holidays, sports schedules, or a shared calendar. Your app, widgets, and shared availability use only what you pick.
+
+What's new in 2.0.5:
+
+- Choose which calendars count. The new Calendars option in the MORE menu lets you exclude holidays, sports schedules, or shared calendars from your availability. The app, widgets, Live Activities, iMessage, Siri, and the share sheet all respect your selection. Apple Watch continues to use all calendars for now.
+- Smarter availability questions. Asking about a weekday ("any hour Friday afternoon", "next Tuesday after 2pm") now always resolves to the correct date, and morning, afternoon, and evening map to sensible hours.
+- Assorted small fixes and polish.

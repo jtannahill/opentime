@@ -1,0 +1,3 @@
+Neue Haas Grotesk Display goes here: NHGDisplay-Regular.ttf, NHGDisplay-Medium.ttf, NHGDisplay-Bold.ttf.
+The font is licensed separately and is not in the public repository. Without it the app uses the system font.
+This note also keeps the resource bundle non-empty so it code-signs.

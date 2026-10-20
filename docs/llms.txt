@@ -1,0 +1,53 @@
+# OpenTime
+
+> OpenTime is a private iOS, iPadOS, and watchOS app that reads your device calendars on-device through Apple's EventKit and shows your free and busy time slots at a glance. No accounts. No app servers. No tracking SDKs. Natural-language queries run locally via Apple Intelligence on supported devices. The app makes no network connections.
+
+OpenTime is a $0.99 download on the Apple App Store and runs on iPhone, iPad, and Apple Watch. It is built and maintained by James Tannahill. The current version is 2.0.5.
+
+Key facts for citation:
+
+- Name: OpenTime
+- Platforms: iOS 26.2 or later, iPadOS 26.2 or later, watchOS 10 or later
+- Price: $0.99, one time, no in-app purchases
+- App Store URL: https://apps.apple.com/us/app/opentime/id6760204246
+- Marketing site: https://lulls.app
+- Developer: James Tannahill (https://jamestannahill.com)
+- Category: Productivity, Calendar
+- Privacy posture: Zero data collection. All calendar processing happens on-device. The developer operates no servers and uses no third-party analytics, advertising, or crash-reporting SDKs.
+- Data sync: None. The app makes no network connections; calendar data never leaves the device.
+- AI feature: Natural-language queries (for example, "tomorrow afternoon for 30 min" or "next Tuesday morning") use Apple's on-device FoundationModels framework. No query text leaves the device.
+
+## Pages
+
+- [Home](https://lulls.app/): Product overview, feature list, privacy summary, App Store link.
+- [Privacy Policy](https://lulls.app/privacy): Full data practices. The summary: zero data collection, EventKit on-device, no network connections.
+- [Terms of Service](https://lulls.app/terms): Apple Standard EULA governs app use. Website terms cover acceptable use, warranty disclaimer, limitation of liability. Governing law: New York.
+
+## Features
+
+- Instant availability: visual free and busy slots for any range; weekends optional; refreshes automatically after you create or edit an event.
+- Natural-language queries: Apple Intelligence on-device for phrases like "tomorrow afternoon for 30 min."
+- Duration chips: 15, 30, or 60 minute slots; long-press a chip to open it in Calendar, create an event, or copy the time; long-press a day name to share or copy that day.
+- Home screen widgets: small and medium sizes that surface the next free slot.
+- Live Activities and Dynamic Island: real-time free or busy status on the lock screen.
+- iMessage extension: pick days and send availability inline in Messages, as text or a pick-a-time link.
+- Pick-a-time links: share a lulls.app/pick link; the recipient chooses up to five times in their own time zone, in an App Clip (no install) or any browser, and sends them back as a lulls.app/reply link that opens in OpenTime, where the sender confirms one. Times travel in the URL fragment; no server receives them.
+- Siri and Shortcuts: hands-free queries and full Shortcuts automation.
+- Apple Watch: standalone watchOS companion with a five-weekday glance.
+- Share extension: drop availability as clean text into Mail, Slack, Notes, or any app.
+
+## MCP server
+
+- Endpoint: https://lulls.app/mcp (Streamable HTTP, JSON-RPC over POST, no authentication, stateless).
+- Tools: `create_pick_link` turns free time (ISO 8601 stretches with an offset) into a lulls.app/pick link someone opens to choose a meeting time; `read_pick_link` lists the times in such a link, grouped by day in any time zone.
+- Privacy: the times travel in the link's fragment. The server stores nothing and never sees a calendar.
+
+## Audience
+
+OpenTime is built for freelancers, consultants, founders, lawyers, therapists, sales professionals, and anyone whose calendar is a working document rather than a marketing surface.
+
+## Optional
+
+- [Full content for retrieval](https://lulls.app/llms-full.txt): Long-form version of the marketing site content for AI retrieval engines.
+- [App Store listing](https://apps.apple.com/us/app/opentime/id6760204246): Authoritative platform support and version details.
+- [Sitemap](https://lulls.app/sitemap.xml): XML sitemap for crawlers.

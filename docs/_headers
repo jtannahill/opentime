@@ -1,0 +1,74 @@
+# Cloudflare Pages security + caching for lulls.app (OpenTime marketing site)
+
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Cross-Origin-Opener-Policy: same-origin
+  Permissions-Policy: accelerometer=(), autoplay=(self), camera=(), cross-origin-isolated=(), display-capture=(), encrypted-media=(self), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(self), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), xr-spatial-tracking=()
+  Content-Security-Policy: default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' https://developer.apple.com; media-src 'self'; base-uri 'self'; form-action 'none'; frame-ancestors 'self'; upgrade-insecure-requests
+
+/
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/privacy
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/terms
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/404
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/*.html
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/icon.png
+  Cache-Control: public, max-age=86400
+
+/icon-512.png
+  Cache-Control: public, max-age=86400
+
+/favicon.ico
+  Cache-Control: public, max-age=86400
+
+/favicon-32.png
+  Cache-Control: public, max-age=86400
+
+/apple-touch-icon.png
+  Cache-Control: public, max-age=86400
+
+/og-image.png
+  Cache-Control: public, max-age=86400
+
+/robots.txt
+  Cache-Control: public, max-age=86400
+
+/sitemap.xml
+  Cache-Control: public, max-age=86400
+
+/humans.txt
+  Cache-Control: public, max-age=86400
+
+/.well-known/security.txt
+  Cache-Control: public, max-age=86400
+  Content-Type: text/plain; charset=utf-8
+
+/.well-known/apple-app-site-association
+  Content-Type: application/json
+  Cache-Control: public, max-age=3600
+
+/pick
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+  Referrer-Policy: no-referrer
+
+/reply
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+  Referrer-Policy: no-referrer
+
+/hero.mp4
+  Cache-Control: public, max-age=86400
+
+/hero-poster.jpg
+  Cache-Control: public, max-age=86400

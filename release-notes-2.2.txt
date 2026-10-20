@@ -1,0 +1,5 @@
+Pick-a-time links now come back to you. The person you send a link to can choose up to five times that suit them and send them back with one tap. Open their reply in OpenTime to see their picks in your time zone, confirm the one you want, and add it to your calendar.
+
+Like the link itself, the reply carries the times inside it, so nothing passes through a server.
+
+Also: a cleaner app icon, with no white showing at the corners.

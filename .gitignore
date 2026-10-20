@@ -1,0 +1,11 @@
+CalendarWidgetExtension.entitlements
+*.xcuserstate
+generate-icon.py
+.superpowers/
+build/
+.DS_Store
+mock/
+
+# Licensed fonts, not redistributable
+OpenTimeUI/Sources/OpenTimeUI/Resources/*.ttf
+OpenTimeUI/Sources/OpenTimeUI/Resources/*.otf

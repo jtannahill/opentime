@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <title>OpenTime: Page not found</title>
+    <meta name="description" content="The page you requested does not exist on lulls.app. Return to the OpenTime home page.">
+    <meta name="theme-color" content="#0a0b0d">
+    <meta name="color-scheme" content="dark">
+    <meta name="robots" content="noindex, follow">
+
+    <style>
+        :root {
+            --bg: #0a0b0d;
+            --surface: #111317;
+            --border: #1d2026;
+            --text: #e8eaec;
+            --text-dim: #8a8f96;
+            --text-faint: #7d828a;
+            --accent: #4ade80;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 16px;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+        }
+        .container { max-width: 480px; text-align: center; }
+        .code {
+            font-family: ui-monospace, "SF Mono", Menlo, monospace;
+            font-size: 13px;
+            color: var(--accent);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        h1 {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 12px;
+        }
+        p {
+            color: var(--text-dim);
+            font-size: 16px;
+            margin-bottom: 32px;
+        }
+        .links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .links a {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--text);
+            text-decoration: none;
+            font-size: 14px;
+            transition: border-color 150ms ease, color 150ms ease, opacity 150ms ease, transform 100ms ease-out;
+        }
+        .links a:active { transform: scale(0.97); }
+        @media (prefers-reduced-motion: reduce) { .links a:active { transform: none; } }
+        .links a.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+        @media (hover: hover) and (pointer: fine) {
+            .links a:hover { border-color: var(--accent); color: var(--accent); }
+            .links a.primary:hover { opacity: 0.9; color: var(--bg); }
+        }
+        a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+        .links a:focus-visible { border-radius: 8px; }
+    </style>
+</head>
+<body ontouchstart="">
+    <main class="container">
+        <p class="code">Error 404</p>
+        <h1>Page not found</h1>
+        <p>That URL does not exist on lulls.app. The page may have been moved, or you followed a stale link.</p>
+        <nav class="links" aria-label="Recovery links">
+            <a href="/" class="primary">OpenTime home</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+            <a href="https://apps.apple.com/us/app/opentime/id6760204246">App Store</a>
+        </nav>
+    </main>
+</body>
+</html>

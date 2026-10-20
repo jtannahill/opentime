@@ -1,0 +1,5 @@
+What's new in 2.0.4:
+
+- Your availability now refreshes immediately after you create or edit an event from inside the app. No more stale slots until the next pull-to-refresh.
+- Free and busy times are now computed by a single shared engine across the app, widgets, Live Activities, Apple Watch, iMessage, Siri, and the share sheet, so every surface shows the same answer.
+- Assorted small fixes and polish.

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<title>Times picked · Open Time</title>
+<meta name="description" content="The times someone picked from your Open Time link. The times are in the link itself; nothing is sent to a server.">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="Times picked">
+<meta property="og:description" content="The times that work for them, picked with Open Time.">
+<meta property="og:image" content="https://lulls.app/og-image.png">
+<meta property="og:site_name" content="Open Time">
+<style>
+  :root {
+    --bg: #0a0b0d; --surface: #111317; --border: #1d2026;
+    --text: #e8eaec; --text-dim: #a6abb2; --accent: #4ade80;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.5;
+    padding: max(24px, env(safe-area-inset-top)) 20px calc(40px + env(safe-area-inset-bottom));
+  }
+  main { max-width: 640px; margin: 0 auto; }
+  h1 { font: 700 clamp(2rem, 7vw, 2.75rem)/1.05 -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; letter-spacing: -0.02em; margin: 8px 0 12px; text-wrap: balance; }
+  .lede { font-size: 1.0625rem; }
+  .note { color: var(--text-dim); font-size: 0.9375rem; margin-top: 4px; }
+  section.pick { border-top: 1px solid var(--border); padding: 18px 0 16px; }
+  section.pick:first-of-type { margin-top: 28px; }
+  section.pick:last-of-type { border-bottom: 1px solid var(--border); }
+  h2 { font: 700 1.25rem/1.2 -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; letter-spacing: -0.01em; }
+  h2 span { font: 500 0.75rem/1 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: 0.12em; color: var(--text-dim); margin-left: 8px; text-transform: uppercase; }
+  .range { font-weight: 600; font-variant-numeric: tabular-nums; margin-top: 4px; }
+  .passed .range, .passed h2 { color: var(--text-dim); }
+  .actions { display: flex; gap: 10px; margin-top: 12px; }
+  .actions button, .actions a {
+    flex: 1; min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
+    font: 600 0.9375rem/1 -apple-system, BlinkMacSystemFont, sans-serif; border-radius: 10px; text-decoration: none; cursor: pointer;
+    transition: transform 100ms ease-out; -webkit-tap-highlight-color: transparent;
+  }
+  .actions button:active, .actions a:active { transform: scale(0.97); }
+  .primary { background: var(--accent); color: var(--bg); border: 0; }
+  .secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  @media (hover: hover) and (pointer: fine) { .secondary:hover { border-color: var(--text-dim); } }
+  button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .empty { border-top: 1px solid var(--border); margin-top: 28px; padding-top: 18px; }
+  .empty h2 { margin-bottom: 6px; }
+  footer { margin-top: 32px; color: var(--text-dim); font-size: 0.875rem; }
+  footer a { color: var(--text); }
+  @media (prefers-reduced-motion: reduce) { .actions button, .actions a { transition: none; } .actions button:active, .actions a:active { transform: none; } }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Times picked</h1>
+  <p class="lede" id="lede"></p>
+  <p class="note" id="note"></p>
+  <div id="picks"></div>
+  <footer>
+    <p>The times are inside this link and never reach a server. Made with <a href="/">Open Time</a> for iPhone.</p>
+  </footer>
+</main>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var MAX = 5;
+  function clean(name) {
+    if (typeof name !== "string") return null;
+    name = name.trim();
+    return name ? name.slice(0, 40) : null;
+  }
+  function decode(fragment) {
+    try {
+      var b = fragment.replace(/-/g, "+").replace(/_/g, "/");
+      while (b.length % 4) b += "=";
+      var bytes = Uint8Array.from(atob(b), function (c) { return c.charCodeAt(0); });
+      var w = JSON.parse(new TextDecoder().decode(bytes));
+      if (w.v !== 1 || !(w.d >= 5 && w.d <= 480) || !Array.isArray(w.p)) return null;
+      var picks = w.p.filter(function (m) { return typeof m === "number" && isFinite(m); }).slice(0, MAX)
+        .map(function (m) { return m * 60000; }).sort(function (a, b) { return a - b; });
+      if (!picks.length) return null;
+      return { name: clean(w.n), forName: clean(w.f), zone: w.z, minutes: w.d, picks: picks };
+    } catch (e) { return null; }
+  }
+  var reply = decode(location.hash.slice(1));
+  var timeFmt = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" });
+  var dayFmt = new Intl.DateTimeFormat(undefined, { weekday: "long" });
+  var dateFmt = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" });
+  var here = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  function zoneName(zone) {
+    try {
+      var part = new Intl.DateTimeFormat(undefined, { timeZone: zone, timeZoneName: "longGeneric" })
+        .formatToParts(new Date()).filter(function (p) { return p.type === "timeZoneName"; })[0];
+      return part ? part.value : zone.replace(/_/g, " ");
+    } catch (e) { return String(zone).replace(/_/g, " "); }
+  }
+  if (!reply) {
+    var d = document.createElement("div"); d.className = "empty";
+    var h = document.createElement("h2"); h.textContent = "This reply has no times in it";
+    var p = document.createElement("p"); p.className = "note"; p.textContent = "It may have been cut short when it was copied. Ask them to send it again.";
+    d.append(h, p); $("picks").append(d);
+    return;
+  }
+  var who = reply.name || "They";
+  $("title").textContent = reply.picks.length === 1 ? who + " picked a time" : who + " picked " + reply.picks.length + " times";
+  $("lede").textContent = reply.minutes + " minutes" + (reply.forName ? " with " + reply.forName : "") + "." +
+    (reply.picks.length > 1 ? " Confirm the one you want." : "");
+  $("note").textContent = "Times are in your time zone (" + zoneName(here) + ")." +
+    (reply.zone && zoneName(reply.zone) !== zoneName(here) ? " They are in " + zoneName(reply.zone) + "." : "");
+
+  var len = reply.minutes * 60000, now = Date.now();
+  var today = new Date(); today = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+  function dayName(t) {
+    var d = new Date(t), day = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    return day === today ? "Today" : day === today + 86400000 ? "Tomorrow" : dayFmt.format(t);
+  }
+  function stamp(t) { return new Date(t).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""); }
+  function zoneAbbr(t) {
+    var part = new Intl.DateTimeFormat(undefined, { timeZoneName: "short" }).formatToParts(t)
+      .filter(function (p) { return p.type === "timeZoneName"; })[0];
+    return part ? " " + part.value : "";
+  }
+  reply.picks.forEach(function (t) {
+    var passed = t + len < now;
+    var sec = document.createElement("section"); sec.className = "pick" + (passed ? " passed" : "");
+    var h = document.createElement("h2"); h.textContent = dayName(t);
+    var sp = document.createElement("span"); sp.textContent = dateFmt.format(t); h.append(sp);
+    var r = document.createElement("p"); r.className = "range";
+    r.textContent = timeFmt.format(t) + " – " + timeFmt.format(t + len) + (passed ? " · passed" : "");
+    sec.append(h, r);
+    if (!passed) {
+      var row = document.createElement("div"); row.className = "actions";
+      var ok = document.createElement("button"); ok.type = "button"; ok.className = "primary"; ok.textContent = "Confirm this time";
+      var text = dayName(t) + ", " + dateFmt.format(t) + " at " + timeFmt.format(t) + " – " + timeFmt.format(t + len) + zoneAbbr(t) + " it is. See you then.";
+      ok.addEventListener("click", function () {
+        if (navigator.share) { navigator.share({ text: text }).catch(function () {}); return; }
+        (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () {
+          ok.textContent = "Copied";
+          setTimeout(function () { ok.textContent = "Confirm this time"; }, 1600);
+        }, function () { window.prompt("Copy this reply:", text); });
+      });
+      var title = reply.name ? "Meeting with " + reply.name : "Meeting";
+      var ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Open Time//Pick a time//EN", "BEGIN:VEVENT",
+        "UID:" + t + "-" + Math.random().toString(36).slice(2) + "@lulls.app", "DTSTAMP:" + stamp(Date.now()),
+        "DTSTART:" + stamp(t), "DTEND:" + stamp(t + len),
+        "SUMMARY:" + title.replace(/([,;\\])/g, "\\$1"), "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
+      var cal = document.createElement("a"); cal.className = "secondary"; cal.textContent = "Add to calendar";
+      cal.download = "Open Time meeting.ics";
+      cal.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+      row.append(ok, cal); sec.append(row);
+    }
+    $("picks").append(sec);
+  });
+})();
+</script>
+</body>
+</html>

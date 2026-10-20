@@ -1,0 +1,115 @@
+# OpenTime: See your free time at a glance
+
+OpenTime is a private iOS, iPadOS, and watchOS app that reads your device calendars on-device through Apple's EventKit framework and shows your open time slots at a glance. The app collects no data, sends nothing to remote servers, and uses no third-party analytics, advertising, or crash-reporting SDKs. Natural-language queries run locally on supported devices via Apple's on-device FoundationModels framework. The app makes no network connections of any kind.
+
+## Product summary
+
+- Name: OpenTime
+- Version: 2.0.5
+- Platforms: iPhone (iOS 26.2+), iPad (iPadOS 26.2+), Apple Watch (watchOS 10+)
+- Price: $0.99, one time
+- App Store: https://apps.apple.com/us/app/opentime/id6760204246
+- Website: https://lulls.app
+- Developer: James Tannahill (https://jamestannahill.com)
+- Category: Productivity, Calendar utility
+
+## What the app does
+
+OpenTime answers a single question: when am I free? It reads your existing iOS calendars on-device, computes open slots, and displays them as a visual schedule. You can scope the view to today, tomorrow, or a custom range, and toggle weekends in or out. There is no meeting booking, no scheduling links, and no social feed. The app does one thing: surface your availability.
+
+## Features in detail
+
+### Instant availability
+A visual schedule of free and busy blocks for a chosen date range. Weekends are optional. The view updates immediately when the underlying calendars change, including right after you create an event from inside the app. This Week, Next Week, and Next 14 Days quick picks plus a custom date range picker scope the view.
+
+### Natural-language queries
+A query bar accepts phrases like "tomorrow afternoon for 30 min" or "next Tuesday morning." On supported devices, Apple's on-device FoundationModels framework interprets the phrase and produces a date range. No query text is transmitted off the device.
+
+### Duration chips and long-press actions
+A slot duration picker subdivides your free blocks into 15, 30, or 60 minute chips. Long-press any chip for Open in Calendar, Create Event Here, or Copy Time. Long-press any day name to share or copy that day's availability to Messages, Mail, Notes, or anywhere else.
+
+### Home screen widgets
+Small and medium widget sizes surface the next free slot directly on your home screen. Tapping any chip launches the app and jumps to the matching view.
+
+### Live Activities and Dynamic Island
+A real-time free or busy indicator on the lock screen and in the Dynamic Island on supported iPhones.
+
+### iMessage extension
+Inside Messages, pick the days you want to share and send a clean availability summary inline. No copy-paste between Calendar and Messages.
+
+### Siri and Shortcuts
+Voice queries such as "Hey Siri, when am I free in Open Time?" return the next available slot hands-free. The full Shortcuts surface area lets you build automations around your real calendar.
+
+### Apple Watch
+A standalone watchOS companion shows your next five weekdays at a glance. The watch app runs independently of the iPhone.
+
+### Share extension
+A system share extension lets you drop availability text into Mail, Slack, Notes, or any app that accepts text. The output is clean, readable, and ready to send.
+
+## Privacy
+
+OpenTime collects no data. The developer operates no servers, runs no analytics, ships no advertising or crash-reporting SDKs, and has no ability to see your calendar, your queries, or your usage. Specifically:
+
+- Calendar access uses Apple's EventKit framework, on-device. OpenTime asks for full calendar access because iOS has no read-only option, and it only writes to your calendar when you create an event yourself.
+- Calendar events are never transmitted off the device.
+- Natural-language queries are processed by Apple Intelligence on-device.
+- The app makes no network connections of any kind.
+- There is no account to create, no email to provide, and no in-app purchase.
+
+## Who OpenTime is for
+
+OpenTime is built for people whose calendar is a working document, not a marketing surface. The core audience includes freelancers, consultants, founders, lawyers, therapists, accountants, sales professionals, and academics. Anyone who needs to answer "when am I free?" repeatedly throughout the day benefits from a single-purpose, instant view.
+
+## What OpenTime is not
+
+OpenTime is not a meeting scheduler. It does not generate booking links, does not coordinate availability between multiple people, and does not connect to Google Calendar, Microsoft 365, or any external service. It reads only the calendars already configured in iOS. If you want a scheduling-link product, look at Calendly, Cal.com, or Fantastical. OpenTime is the opposite category: a private, on-device availability viewer.
+
+## Technical foundations
+
+- Calendar access: EventKit (full access, because iOS has no read-only option; writes only when you create an event yourself)
+- Natural language: Apple FoundationModels (on-device, supported devices only)
+- Widgets: WidgetKit
+- Live Activities: ActivityKit
+- iMessage: Messages extension target
+- Siri: App Intents
+- Apple Watch: independent watchOS target
+
+No third-party SDKs are linked. The binary contains only Apple frameworks and OpenTime's own code.
+
+## Common questions
+
+### Does OpenTime work with Google Calendar?
+Indirectly. If you have a Google Calendar configured in the iOS Calendar app, OpenTime sees those events through EventKit. OpenTime does not talk to Google's servers directly.
+
+### Does OpenTime work without internet?
+Yes. The app is fully functional offline and makes no network connections.
+
+### Is Apple Intelligence required?
+No. Apple Intelligence powers the natural-language query bar on supported devices. On other devices, you can still use widgets, quick picks, and the date range pickers.
+
+### Can OpenTime book meetings or send scheduling links?
+
+OpenTime can send a pick-a-time link (https://lulls.app/pick#...). The recipient chooses up to five of your free times, in their own time zone, in an App Clip on iPhone or in any browser, and sends them back as a reply link (https://lulls.app/reply#...). The reply opens in OpenTime on iPhone, or in a browser elsewhere, and lists their picks with a way to confirm one and add it to a calendar. The times are encoded in the link's fragment, so no server receives them. OpenTime does not hold or book the time.
+
+### Is there an MCP server?
+
+Yes: https://lulls.app/mcp, a public, stateless MCP server (Streamable HTTP). Tools: create_pick_link (free time in, pick-a-time link out) and read_pick_link (a pick-a-time link or a reply link in, its times listed by day in any time zone out). It stores nothing and has no calendar access.
+
+### Does the developer see my calendar?
+No. There are no servers and no developer-side data collection of any kind.
+
+### How is OpenTime priced?
+$0.99, one time. There are no in-app purchases and no subscription.
+
+### What devices does OpenTime require?
+iOS 26.2 or later on iPhone, iPadOS 26.2 or later on iPad, and watchOS 10 or later on Apple Watch.
+
+### Where do I download OpenTime?
+The Apple App Store, at https://apps.apple.com/us/app/opentime/id6760204246.
+
+### Who builds OpenTime?
+James Tannahill, an independent developer. Contact: https://jamestannahill.com.
+
+## Legal
+
+The app is licensed under Apple's Standard End User License Agreement. Website use is governed by the Terms of Service at https://lulls.app/terms. Data practices are documented at https://lulls.app/privacy. Governing law for the developer's terms is the State of New York.

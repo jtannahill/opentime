@@ -1,0 +1,1240 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3C8497362F5B6E8400A9F4E0 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8497352F5B6E8400A9F4E0 /* WidgetKit.framework */; };
+		3C8497382F5B6E8400A9F4E0 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8497372F5B6E8400A9F4E0 /* SwiftUI.framework */; };
+		3C8497472F5B6E8600A9F4E0 /* CalendarWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3C8497332F5B6E8400A9F4E0 /* CalendarWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3C8497872F5B800000A9F4E0 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8497812F5B800000A9F4E0 /* Messages.framework */; };
+		3C8497952F5B900000A9F4E0 /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3C8497902F5B900000A9F4E0 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3C8497A52F5B900000A9F4E0 /* OpenTimeWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 3C8497A02F5B900000A9F4E0 /* OpenTimeWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3CB1AC8E2FAFF1D900DC70C3 /* OpenTimeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3CB1AC8D2FAFF1D900DC70C3 /* OpenTimeUI */; };
+		3CB1AC962FB0D4CB00DC70C3 /* OpenTimeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3CB1AC952FB0D4CB00DC70C3 /* OpenTimeUI */; };
+		3CB1AC982FB0D4EE00DC70C3 /* OpenTimeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3CB1AC972FB0D4EE00DC70C3 /* OpenTimeUI */; };
+		3CB1AC9A2FB0D4F300DC70C3 /* OpenTimeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3CB1AC992FB0D4F300DC70C3 /* OpenTimeUI */; };
+		3CC1A1012FC0000000A9F4E0 /* OpenTimeClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 3CC1A1002FC0000000A9F4E0 /* OpenTimeClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3CC1A1142FC0000000A9F4E0 /* OpenTimeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3CC1A1132FC0000000A9F4E0 /* OpenTimeUI */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3C8497452F5B6E8600A9F4E0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3C8497192F5B6E4400A9F4E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3C8497322F5B6E8400A9F4E0;
+			remoteInfo = CalendarWidgetExtension;
+		};
+		3C8497882F5B800000A9F4E0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3C8497192F5B6E4400A9F4E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3C8497822F5B800000A9F4E0;
+			remoteInfo = MessagesExtension;
+		};
+		3C8497962F5B900000A9F4E0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3C8497192F5B6E4400A9F4E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3C8497912F5B900000A9F4E0;
+			remoteInfo = ShareExtension;
+		};
+		3C8497A62F5B900000A9F4E0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3C8497192F5B6E4400A9F4E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3C8497A12F5B900000A9F4E0;
+			remoteInfo = OpenTimeWatch;
+		};
+		3CC1A1022FC0000000A9F4E0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3C8497192F5B6E4400A9F4E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3CC1A1062FC0000000A9F4E0;
+			remoteInfo = OpenTimeClip;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3C84974C2F5B6E8600A9F4E0 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				3C8497472F5B6E8600A9F4E0 /* CalendarWidgetExtension.appex in Embed Foundation Extensions */,
+				3C8497952F5B900000A9F4E0 /* ShareExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C8497AC2F5B900000A9F4E0 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				3C8497A52F5B900000A9F4E0 /* OpenTimeWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3CC1A1042FC0000000A9F4E0 /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+				3CC1A1012FC0000000A9F4E0 /* OpenTimeClip.app in Embed App Clips */,
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		3C8497212F5B6E4400A9F4E0 /* OpenTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C8497332F5B6E8400A9F4E0 /* CalendarWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CalendarWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C8497352F5B6E8400A9F4E0 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		3C8497372F5B6E8400A9F4E0 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		3C8497712F5B716600A9F4E0 /* CalendarWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CalendarWidgetExtension.entitlements; sourceTree = "<group>"; };
+		3C8497802F5B800000A9F4E0 /* MessagesExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MessagesExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C8497812F5B800000A9F4E0 /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
+		3C8497902F5B900000A9F4E0 /* ShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C8497A02F5B900000A9F4E0 /* OpenTimeWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenTimeWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3CC1A1002FC0000000A9F4E0 /* OpenTimeClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenTimeClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		3C8497482F5B6E8600A9F4E0 /* Exceptions for "CalendarWidget" folder in "CalendarWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3C8497322F5B6E8400A9F4E0 /* CalendarWidgetExtension */;
+		};
+		3C84978E2F5B800000A9F4E0 /* Exceptions for "MessagesExtension" folder in "MessagesExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3C8497822F5B800000A9F4E0 /* MessagesExtension */;
+		};
+		3C84979C2F5B900000A9F4E0 /* Exceptions for "ShareExtension" folder in "ShareExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3C8497912F5B900000A9F4E0 /* ShareExtension */;
+		};
+		3CB1AC9C2FB0D8DB00DC70C3 /* Exceptions for "OpenTime" folder in "OpenTime" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3C8497202F5B6E4400A9F4E0 /* OpenTime */;
+		};
+		3CC1A1992FC0000000A9F4E0 /* Exceptions for "OpenTimeClip" folder in "OpenTimeClip" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3CC1A1062FC0000000A9F4E0 /* OpenTimeClip */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		3C8497232F5B6E4400A9F4E0 /* OpenTime */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3CB1AC9C2FB0D8DB00DC70C3 /* Exceptions for "OpenTime" folder in "OpenTime" target */,
+			);
+			path = OpenTime;
+			sourceTree = "<group>";
+		};
+		3C8497392F5B6E8400A9F4E0 /* CalendarWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3C8497482F5B6E8600A9F4E0 /* Exceptions for "CalendarWidget" folder in "CalendarWidgetExtension" target */,
+			);
+			path = CalendarWidget;
+			sourceTree = "<group>";
+		};
+		3C84978D2F5B800000A9F4E0 /* MessagesExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3C84978E2F5B800000A9F4E0 /* Exceptions for "MessagesExtension" folder in "MessagesExtension" target */,
+			);
+			path = MessagesExtension;
+			sourceTree = "<group>";
+		};
+		3C84979B2F5B900000A9F4E0 /* ShareExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3C84979C2F5B900000A9F4E0 /* Exceptions for "ShareExtension" folder in "ShareExtension" target */,
+			);
+			path = ShareExtension;
+			sourceTree = "<group>";
+		};
+		3C8497AB2F5B900000A9F4E0 /* OpenTimeWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = OpenTimeWatch;
+			sourceTree = "<group>";
+		};
+		3CC1A1052FC0000000A9F4E0 /* OpenTimeClip */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3CC1A1992FC0000000A9F4E0 /* Exceptions for "OpenTimeClip" folder in "OpenTimeClip" target */,
+			);
+			path = OpenTimeClip;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3C84971E2F5B6E4400A9F4E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CB1AC8E2FAFF1D900DC70C3 /* OpenTimeUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C8497302F5B6E8400A9F4E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C8497382F5B6E8400A9F4E0 /* SwiftUI.framework in Frameworks */,
+				3CB1AC962FB0D4CB00DC70C3 /* OpenTimeUI in Frameworks */,
+				3C8497362F5B6E8400A9F4E0 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C8497842F5B800000A9F4E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C8497872F5B800000A9F4E0 /* Messages.framework in Frameworks */,
+				3CB1AC982FB0D4EE00DC70C3 /* OpenTimeUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C8497932F5B900000A9F4E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CB1AC9A2FB0D4F300DC70C3 /* OpenTimeUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C8497A32F5B900000A9F4E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3CC1A1082FC0000000A9F4E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CC1A1142FC0000000A9F4E0 /* OpenTimeUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3C8497182F5B6E4400A9F4E0 = {
+			isa = PBXGroup;
+			children = (
+				3C8497712F5B716600A9F4E0 /* CalendarWidgetExtension.entitlements */,
+				3C8497232F5B6E4400A9F4E0 /* OpenTime */,
+				3C8497392F5B6E8400A9F4E0 /* CalendarWidget */,
+				3C84978D2F5B800000A9F4E0 /* MessagesExtension */,
+				3C84979B2F5B900000A9F4E0 /* ShareExtension */,
+				3C8497AB2F5B900000A9F4E0 /* OpenTimeWatch */,
+				3CC1A1052FC0000000A9F4E0 /* OpenTimeClip */,
+				3C8497342F5B6E8400A9F4E0 /* Frameworks */,
+				3C8497222F5B6E4400A9F4E0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3C8497222F5B6E4400A9F4E0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3C8497212F5B6E4400A9F4E0 /* OpenTime.app */,
+				3C8497332F5B6E8400A9F4E0 /* CalendarWidgetExtension.appex */,
+				3C8497802F5B800000A9F4E0 /* MessagesExtension.appex */,
+				3C8497902F5B900000A9F4E0 /* ShareExtension.appex */,
+				3C8497A02F5B900000A9F4E0 /* OpenTimeWatch.app */,
+				3CC1A1002FC0000000A9F4E0 /* OpenTimeClip.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3C8497342F5B6E8400A9F4E0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3C8497352F5B6E8400A9F4E0 /* WidgetKit.framework */,
+				3C8497372F5B6E8400A9F4E0 /* SwiftUI.framework */,
+				3C8497812F5B800000A9F4E0 /* Messages.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3C8497202F5B6E4400A9F4E0 /* OpenTime */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C84972C2F5B6E4600A9F4E0 /* Build configuration list for PBXNativeTarget "OpenTime" */;
+			buildPhases = (
+				3C84971D2F5B6E4400A9F4E0 /* Sources */,
+				3C84971E2F5B6E4400A9F4E0 /* Frameworks */,
+				3C84971F2F5B6E4400A9F4E0 /* Resources */,
+				3C84974C2F5B6E8600A9F4E0 /* Embed Foundation Extensions */,
+				3C8497AC2F5B900000A9F4E0 /* Embed Watch Content */,
+				3CC1A1042FC0000000A9F4E0 /* Embed App Clips */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3C8497462F5B6E8600A9F4E0 /* PBXTargetDependency */,
+				3C8497892F5B800000A9F4E0 /* PBXTargetDependency */,
+				3C8497972F5B900000A9F4E0 /* PBXTargetDependency */,
+				3C8497A72F5B900000A9F4E0 /* PBXTargetDependency */,
+				3CC1A1032FC0000000A9F4E0 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3C8497232F5B6E4400A9F4E0 /* OpenTime */,
+			);
+			name = OpenTime;
+			packageProductDependencies = (
+				3CB1AC8D2FAFF1D900DC70C3 /* OpenTimeUI */,
+			);
+			productName = OpenTime;
+			productReference = 3C8497212F5B6E4400A9F4E0 /* OpenTime.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3C8497322F5B6E8400A9F4E0 /* CalendarWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C8497492F5B6E8600A9F4E0 /* Build configuration list for PBXNativeTarget "CalendarWidgetExtension" */;
+			buildPhases = (
+				3C84972F2F5B6E8400A9F4E0 /* Sources */,
+				3C8497302F5B6E8400A9F4E0 /* Frameworks */,
+				3C8497312F5B6E8400A9F4E0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				3C8497392F5B6E8400A9F4E0 /* CalendarWidget */,
+			);
+			name = CalendarWidgetExtension;
+			packageProductDependencies = (
+				3CB1AC952FB0D4CB00DC70C3 /* OpenTimeUI */,
+			);
+			productName = CalendarWidgetExtension;
+			productReference = 3C8497332F5B6E8400A9F4E0 /* CalendarWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		3C8497822F5B800000A9F4E0 /* MessagesExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C84978A2F5B800000A9F4E0 /* Build configuration list for PBXNativeTarget "MessagesExtension" */;
+			buildPhases = (
+				3C8497832F5B800000A9F4E0 /* Sources */,
+				3C8497842F5B800000A9F4E0 /* Frameworks */,
+				3C8497852F5B800000A9F4E0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				3C84978D2F5B800000A9F4E0 /* MessagesExtension */,
+			);
+			name = MessagesExtension;
+			packageProductDependencies = (
+				3CB1AC972FB0D4EE00DC70C3 /* OpenTimeUI */,
+			);
+			productName = MessagesExtension;
+			productReference = 3C8497802F5B800000A9F4E0 /* MessagesExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		3C8497912F5B900000A9F4E0 /* ShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C8497982F5B900000A9F4E0 /* Build configuration list for PBXNativeTarget "ShareExtension" */;
+			buildPhases = (
+				3C8497922F5B900000A9F4E0 /* Sources */,
+				3C8497932F5B900000A9F4E0 /* Frameworks */,
+				3C8497942F5B900000A9F4E0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				3C84979B2F5B900000A9F4E0 /* ShareExtension */,
+			);
+			name = ShareExtension;
+			packageProductDependencies = (
+				3CB1AC992FB0D4F300DC70C3 /* OpenTimeUI */,
+			);
+			productName = ShareExtension;
+			productReference = 3C8497902F5B900000A9F4E0 /* ShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		3C8497A12F5B900000A9F4E0 /* OpenTimeWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C8497A82F5B900000A9F4E0 /* Build configuration list for PBXNativeTarget "OpenTimeWatch" */;
+			buildPhases = (
+				3C8497A22F5B900000A9F4E0 /* Sources */,
+				3C8497A32F5B900000A9F4E0 /* Frameworks */,
+				3C8497A42F5B900000A9F4E0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				3C8497AB2F5B900000A9F4E0 /* OpenTimeWatch */,
+			);
+			name = OpenTimeWatch;
+			packageProductDependencies = (
+			);
+			productName = OpenTimeWatch;
+			productReference = 3C8497A02F5B900000A9F4E0 /* OpenTimeWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3CC1A1062FC0000000A9F4E0 /* OpenTimeClip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3CC1A1102FC0000000A9F4E0 /* Build configuration list for PBXNativeTarget "OpenTimeClip" */;
+			buildPhases = (
+				3CC1A1072FC0000000A9F4E0 /* Sources */,
+				3CC1A1082FC0000000A9F4E0 /* Frameworks */,
+				3CC1A1092FC0000000A9F4E0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				3CC1A1052FC0000000A9F4E0 /* OpenTimeClip */,
+			);
+			name = OpenTimeClip;
+			packageProductDependencies = (
+				3CC1A1132FC0000000A9F4E0 /* OpenTimeUI */,
+			);
+			productName = OpenTimeClip;
+			productReference = 3CC1A1002FC0000000A9F4E0 /* OpenTimeClip.app */;
+			productType = "com.apple.product-type.application.on-demand-install-capable";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3C8497192F5B6E4400A9F4E0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2630;
+				LastUpgradeCheck = 2630;
+				TargetAttributes = {
+					3C8497202F5B6E4400A9F4E0 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					3C8497322F5B6E8400A9F4E0 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					3C8497822F5B800000A9F4E0 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					3C8497912F5B900000A9F4E0 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					3C8497A12F5B900000A9F4E0 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					3CC1A1062FC0000000A9F4E0 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+				};
+			};
+			buildConfigurationList = 3C84971C2F5B6E4400A9F4E0 /* Build configuration list for PBXProject "OpenTime" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3C8497182F5B6E4400A9F4E0;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3CB1AC8C2FAFF1D900DC70C3 /* XCLocalSwiftPackageReference "OpenTimeUI" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 3C8497222F5B6E4400A9F4E0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3C8497202F5B6E4400A9F4E0 /* OpenTime */,
+				3C8497322F5B6E8400A9F4E0 /* CalendarWidgetExtension */,
+				3C8497822F5B800000A9F4E0 /* MessagesExtension */,
+				3C8497912F5B900000A9F4E0 /* ShareExtension */,
+				3C8497A12F5B900000A9F4E0 /* OpenTimeWatch */,
+				3CC1A1062FC0000000A9F4E0 /* OpenTimeClip */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3C84971F2F5B6E4400A9F4E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C8497312F5B6E8400A9F4E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C8497852F5B800000A9F4E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C8497942F5B900000A9F4E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C8497A42F5B900000A9F4E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3CC1A1092FC0000000A9F4E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3C84971D2F5B6E4400A9F4E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C84972F2F5B6E8400A9F4E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C8497832F5B800000A9F4E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C8497922F5B900000A9F4E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C8497A22F5B900000A9F4E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3CC1A1072FC0000000A9F4E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3C8497462F5B6E8600A9F4E0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3C8497322F5B6E8400A9F4E0 /* CalendarWidgetExtension */;
+			targetProxy = 3C8497452F5B6E8600A9F4E0 /* PBXContainerItemProxy */;
+		};
+		3C8497892F5B800000A9F4E0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3C8497822F5B800000A9F4E0 /* MessagesExtension */;
+			targetProxy = 3C8497882F5B800000A9F4E0 /* PBXContainerItemProxy */;
+		};
+		3C8497972F5B900000A9F4E0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3C8497912F5B900000A9F4E0 /* ShareExtension */;
+			targetProxy = 3C8497962F5B900000A9F4E0 /* PBXContainerItemProxy */;
+		};
+		3C8497A72F5B900000A9F4E0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3C8497A12F5B900000A9F4E0 /* OpenTimeWatch */;
+			targetProxy = 3C8497A62F5B900000A9F4E0 /* PBXContainerItemProxy */;
+		};
+		3CC1A1032FC0000000A9F4E0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3CC1A1062FC0000000A9F4E0 /* OpenTimeClip */;
+			targetProxy = 3CC1A1022FC0000000A9F4E0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3C84972A2F5B6E4600A9F4E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3C84972B2F5B6E4600A9F4E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3C84972D2F5B6E4600A9F4E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OpenTime/OpenTime.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OpenTime/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Time";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Open Time needs access to your calendars to show free and busy time slots.";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamestannahill.CalendarAvailability;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3C84972E2F5B6E4600A9F4E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OpenTime/OpenTime.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OpenTime/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Time";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Open Time needs access to your calendars to show free and busy time slots.";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamestannahill.CalendarAvailability;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3C84974A2F5B6E8600A9F4E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CalendarWidget/CalendarWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CalendarWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CalendarWidget;
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Open Time needs access to your calendars to show free and busy time slots.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamestannahill.CalendarAvailability.CalendarWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3C84974B2F5B6E8600A9F4E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CalendarWidget/CalendarWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CalendarWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CalendarWidget;
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Open Time needs access to your calendars to show free and busy time slots.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamestannahill.CalendarAvailability.CalendarWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3C84978B2F5B800000A9F4E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MessagesExtension/MessagesExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MessagesExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Time";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Open Time needs access to your calendars to share your availability in iMessage.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamestannahill.CalendarAvailability.MessagesExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3C84978C2F5B800000A9F4E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MessagesExtension/MessagesExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MessagesExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Time";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Open Time needs access to your calendars to share your availability in iMessage.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamestannahill.CalendarAvailability.MessagesExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3C8497992F5B900000A9F4E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Time";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Open Time needs calendar access to share your availability.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamestannahill.CalendarAvailability.ShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3C84979A2F5B900000A9F4E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Time";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Open Time needs calendar access to share your availability.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamestannahill.CalendarAvailability.ShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3C8497A92F5B900000A9F4E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Time";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Open Time needs calendar access to show your availability on Apple Watch.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.jamestannahill.CalendarAvailability;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamestannahill.CalendarAvailability.watchapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		3C8497AA2F5B900000A9F4E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Time";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Open Time needs calendar access to show your availability on Apple Watch.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.jamestannahill.CalendarAvailability;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamestannahill.CalendarAvailability.watchapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		3CC1A1112FC0000000A9F4E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OpenTimeClip/OpenTimeClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OpenTimeClip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Time";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamestannahill.CalendarAvailability.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3CC1A1122FC0000000A9F4E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OpenTimeClip/OpenTimeClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = P3ZC6ZG46V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OpenTimeClip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Time";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamestannahill.CalendarAvailability.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3C84971C2F5B6E4400A9F4E0 /* Build configuration list for PBXProject "OpenTime" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C84972A2F5B6E4600A9F4E0 /* Debug */,
+				3C84972B2F5B6E4600A9F4E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C84972C2F5B6E4600A9F4E0 /* Build configuration list for PBXNativeTarget "OpenTime" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C84972D2F5B6E4600A9F4E0 /* Debug */,
+				3C84972E2F5B6E4600A9F4E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C8497492F5B6E8600A9F4E0 /* Build configuration list for PBXNativeTarget "CalendarWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C84974A2F5B6E8600A9F4E0 /* Debug */,
+				3C84974B2F5B6E8600A9F4E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C84978A2F5B800000A9F4E0 /* Build configuration list for PBXNativeTarget "MessagesExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C84978B2F5B800000A9F4E0 /* Debug */,
+				3C84978C2F5B800000A9F4E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C8497982F5B900000A9F4E0 /* Build configuration list for PBXNativeTarget "ShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C8497992F5B900000A9F4E0 /* Debug */,
+				3C84979A2F5B900000A9F4E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C8497A82F5B900000A9F4E0 /* Build configuration list for PBXNativeTarget "OpenTimeWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C8497A92F5B900000A9F4E0 /* Debug */,
+				3C8497AA2F5B900000A9F4E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3CC1A1102FC0000000A9F4E0 /* Build configuration list for PBXNativeTarget "OpenTimeClip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3CC1A1112FC0000000A9F4E0 /* Debug */,
+				3CC1A1122FC0000000A9F4E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		3CB1AC8C2FAFF1D900DC70C3 /* XCLocalSwiftPackageReference "OpenTimeUI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = OpenTimeUI;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3CB1AC8D2FAFF1D900DC70C3 /* OpenTimeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OpenTimeUI;
+		};
+		3CB1AC952FB0D4CB00DC70C3 /* OpenTimeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3CB1AC8C2FAFF1D900DC70C3 /* XCLocalSwiftPackageReference "OpenTimeUI" */;
+			productName = OpenTimeUI;
+		};
+		3CB1AC972FB0D4EE00DC70C3 /* OpenTimeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3CB1AC8C2FAFF1D900DC70C3 /* XCLocalSwiftPackageReference "OpenTimeUI" */;
+			productName = OpenTimeUI;
+		};
+		3CB1AC992FB0D4F300DC70C3 /* OpenTimeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3CB1AC8C2FAFF1D900DC70C3 /* XCLocalSwiftPackageReference "OpenTimeUI" */;
+			productName = OpenTimeUI;
+		};
+		3CC1A1132FC0000000A9F4E0 /* OpenTimeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3CB1AC8C2FAFF1D900DC70C3 /* XCLocalSwiftPackageReference "OpenTimeUI" */;
+			productName = OpenTimeUI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 3C8497192F5B6E4400A9F4E0 /* Project object */;
+}

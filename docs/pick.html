@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<title>Pick a time · Open Time</title>
+<meta name="description" content="Choose up to five times from someone's free times and send them back. The times are in the link itself; nothing is sent to a server.">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="dark">
+<meta name="apple-itunes-app" content="app-id=6760204246, app-clip-bundle-id=com.jamestannahill.CalendarAvailability.Clip, app-clip-display=card">
+<meta property="og:title" content="Pick a time">
+<meta property="og:description" content="Choose the times that suit you. Shared with Open Time.">
+<meta property="og:image" content="https://lulls.app/og-image.png">
+<meta property="og:site_name" content="Open Time">
+<style>
+  :root {
+    --bg: #0a0b0d; --surface: #111317; --border: #1d2026;
+    --text: #e8eaec; --text-dim: #a6abb2; --accent: #4ade80;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.5;
+    padding: max(24px, env(safe-area-inset-top)) 20px calc(140px + env(safe-area-inset-bottom));
+  }
+  main { max-width: 640px; margin: 0 auto; }
+  h1 { font: 700 clamp(2rem, 7vw, 2.75rem)/1.05 -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; letter-spacing: -0.02em; margin: 8px 0 12px; text-wrap: balance; }
+  .lede { font-size: 1.0625rem; }
+  .note { color: var(--text-dim); font-size: 0.9375rem; margin-top: 4px; }
+  section.day { border-top: 1px solid var(--border); padding: 18px 0 16px; }
+  section.day:first-of-type { margin-top: 28px; }
+  section.day:last-of-type { border-bottom: 1px solid var(--border); }
+  h2 { font: 700 1.25rem/1.2 -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; letter-spacing: -0.01em; }
+  h2 span { font: 500 0.75rem/1 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: 0.12em; color: var(--text-dim); margin-left: 8px; text-transform: uppercase; }
+  .times { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .times button {
+    font: 600 0.9375rem/1 -apple-system, BlinkMacSystemFont, sans-serif; font-variant-numeric: tabular-nums;
+    min-height: 44px; padding: 0 14px; border-radius: 10px; cursor: pointer;
+    color: var(--text); background: var(--surface); border: 1px solid var(--border);
+    -webkit-tap-highlight-color: transparent; transition: transform 100ms ease-out, background-color 120ms ease;
+  }
+  .times button:active { transform: scale(0.97); }
+  .times button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  @media (hover: hover) and (pointer: fine) { .times button:hover { border-color: var(--text-dim); } }
+  button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .empty { border-top: 1px solid var(--border); margin-top: 28px; padding-top: 18px; }
+  .empty h2 { margin-bottom: 6px; }
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0; padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+    background: rgba(17, 19, 23, 0.86); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border-top: 1px solid var(--border); transform: translateY(100%); transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .bar.on { transform: none; transition-duration: 280ms; }
+  .bar:not(.on) { transition-duration: 180ms; }
+  .bar .inner { max-width: 640px; margin: 0 auto; }
+  .bar ul { list-style: none; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .bar .count { color: var(--text-dim); font-size: 0.875rem; margin: 2px 0 10px; }
+  .bar input {
+    width: 100%; min-height: 44px; margin-bottom: 10px; padding: 0 12px; border-radius: 10px;
+    font: 400 1rem/1 -apple-system, BlinkMacSystemFont, sans-serif; color: var(--text);
+    background: var(--bg); border: 1px solid var(--border);
+  }
+  .bar input::placeholder { color: var(--text-dim); }
+  .bar input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .actions [hidden] { display: none; }
+  .actions { display: flex; gap: 10px; }
+  .actions button, .actions a {
+    flex: 1; min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
+    font: 600 0.9375rem/1 -apple-system, BlinkMacSystemFont, sans-serif; border-radius: 10px; text-decoration: none; cursor: pointer;
+  }
+  .primary { background: var(--accent); color: var(--bg); border: 0; }
+  .actions button, .actions a { transition: transform 100ms ease-out; -webkit-tap-highlight-color: transparent; }
+  .actions button:active, .actions a:active, .demo:active { transform: scale(0.97); }
+  .secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .demo { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border-radius: 10px; text-decoration: none; font-weight: 600; margin-bottom: 10px; }
+  footer { margin-top: 32px; color: var(--text-dim); font-size: 0.875rem; }
+  footer a { color: var(--text); }
+  @media (prefers-reduced-motion: reduce) { .bar { transition: none; } .times button, .actions button, .actions a { transition: none; } .times button:active, .actions button:active, .actions a:active, .demo:active { transform: none; } }
+  @media (prefers-reduced-transparency: reduce) { .bar { background: var(--surface); backdrop-filter: none; -webkit-backdrop-filter: none; } }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Pick a time</h1>
+  <p class="lede" id="lede"></p>
+  <p class="note" id="note"></p>
+  <div id="days"></div>
+  <footer>
+    <p>The times are inside this link and never reach a server. Made with <a href="/">Open Time</a> for iPhone.</p>
+  </footer>
+</main>
+<div class="bar" id="bar" aria-live="polite">
+  <div class="inner">
+    <ul id="chosen"></ul>
+    <p class="count" id="count"></p>
+    <input id="who" type="text" autocomplete="given-name" maxlength="40" placeholder="Your name (optional)" aria-label="Your name (optional)">
+    <div class="actions">
+      <button class="primary" id="send" type="button">Send my times</button>
+      <a class="secondary" id="ics" download="Open Time meeting.ics" href="#">Add to calendar</a>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  function decode(fragment) {
+    try {
+      var b = fragment.replace(/-/g, "+").replace(/_/g, "/");
+      while (b.length % 4) b += "=";
+      var bytes = Uint8Array.from(atob(b), function (c) { return c.charCodeAt(0); });
+      var w = JSON.parse(new TextDecoder().decode(bytes));
+      if (w.v !== 1 || !(w.d >= 5 && w.d <= 480) || !Array.isArray(w.s)) return null;
+      var slots = w.s.slice(0, 80).filter(function (p) {
+        return Array.isArray(p) && p.length === 2 && p[1] >= w.d && p[1] <= 1440;
+      }).map(function (p) { return { start: p[0] * 60000, minutes: p[1] }; });
+      return { name: typeof w.n === "string" ? w.n.slice(0, 40) : null, zone: w.z, minutes: w.d, slots: slots };
+    } catch (e) { return null; }
+  }
+  var MAX = 5;
+  var link = decode(location.hash.slice(1));
+  var timeFmt = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" });
+  var dayFmt = new Intl.DateTimeFormat(undefined, { weekday: "long" });
+  var dateFmt = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" });
+  var here = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  function zoneName(zone) {
+    try {
+      var part = new Intl.DateTimeFormat(undefined, { timeZone: zone, timeZoneName: "longGeneric" })
+        .formatToParts(new Date()).filter(function (p) { return p.type === "timeZoneName"; })[0];
+      return part ? part.value : zone.replace(/_/g, " ");
+    } catch (e) { return String(zone).replace(/_/g, " "); }
+  }
+
+  function empty(title, detail) {
+    $("days").innerHTML = "";
+    var d = document.createElement("div"); d.className = "empty";
+    var h = document.createElement("h2"); h.textContent = title;
+    var p = document.createElement("p"); p.className = "note"; p.textContent = detail;
+    d.append(h, p); $("days").append(d);
+  }
+  if (!link && !location.hash.slice(1)) {
+    // Arrived with no link at all, e.g. from the homepage: explain the page
+    // and offer an example built from the next few weekdays.
+    $("lede").textContent = "This is where pick-a-time links from Open Time open, on any device. Choose up to five of someone's free times, then send them back with one tap.";
+    var demo = [], dd = new Date(); dd.setHours(0, 0, 0, 0);
+    while (demo.length < 6) {
+      dd.setDate(dd.getDate() + 1);
+      if (dd.getDay() === 0 || dd.getDay() === 6) continue;
+      var m = Math.round(dd.getTime() / 60000);
+      demo.push([m + 10 * 60, 90], [m + 14 * 60, 120]);
+    }
+    var json = JSON.stringify({ v: 1, n: "Sam", z: here, d: 30, s: demo });
+    var frag = btoa(String.fromCharCode.apply(null, new TextEncoder().encode(json))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    var box = document.createElement("div"); box.className = "empty";
+    var a = document.createElement("a"); a.className = "primary demo"; a.href = "#" + frag; a.textContent = "See an example";
+    a.addEventListener("click", function () { setTimeout(function () { location.reload(); }, 0); });
+    var p = document.createElement("p"); p.className = "note"; p.textContent = "The example uses made-up free times for the next three weekdays.";
+    box.append(a, p); $("days").append(box);
+    return;
+  }
+  if (!link) {
+    $("lede").textContent = "";
+    empty("This link has no times in it", "It may have been cut short when it was copied. Ask for the link again.");
+    return;
+  }
+  $("title").textContent = link.name ? link.name + " is free at these times" : "Pick a time";
+  $("lede").textContent = link.minutes + " minutes. Choose up to " + MAX + " times that suit you, then send them back.";
+  $("note").textContent = "Times are in your time zone (" + zoneName(here) + ")." +
+    (link.zone && zoneName(link.zone) !== zoneName(here) ? " Sent from " + zoneName(link.zone) + "." : "");
+
+  var now = Date.now(), step = Math.min(link.minutes, 30) * 60000, len = link.minutes * 60000;
+  var choices = [];
+  link.slots.forEach(function (s) {
+    for (var t = s.start; t + len <= s.start + s.minutes * 60000; t += step) if (t >= now) choices.push(t);
+  });
+  if (!choices.length) { empty("These times have passed", "Ask for a fresh link with times that are still ahead."); return; }
+
+  var byDay = {};
+  choices.sort(function (a, b) { return a - b; }).forEach(function (t) {
+    var d = new Date(t); var key = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    (byDay[key] = byDay[key] || []).push(t);
+  });
+  var today = new Date(); today = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+  var selected = [], buttons = [];
+  Object.keys(byDay).sort().forEach(function (key) {
+    var day = Number(key), sec = document.createElement("section"); sec.className = "day";
+    var h = document.createElement("h2");
+    h.textContent = day === today ? "Today" : day === today + 86400000 ? "Tomorrow" : dayFmt.format(day);
+    var sp = document.createElement("span"); sp.textContent = dateFmt.format(day); h.append(sp);
+    var row = document.createElement("div"); row.className = "times";
+    byDay[key].forEach(function (t) {
+      var b = document.createElement("button"); b.type = "button";
+      b.textContent = timeFmt.format(t); b.setAttribute("aria-pressed", "false");
+      b.dataset.t = t;
+      b.addEventListener("click", function () { toggle(t); });
+      buttons.push(b); row.append(b);
+    });
+    sec.append(h, row); $("days").append(sec);
+  });
+
+  function stamp(t) { return new Date(t).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""); }
+  function when(t) { return dayFmt.format(t) + ", " + dateFmt.format(t) + " · " + timeFmt.format(t) + " – " + timeFmt.format(t + len); }
+  function b64url(text) {
+    return btoa(String.fromCharCode.apply(null, new TextEncoder().encode(text))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  try { $("who").value = localStorage.getItem("pickReplyName") || ""; } catch (e) {}
+  $("who").addEventListener("input", function () {
+    try { localStorage.setItem("pickReplyName", $("who").value); } catch (e) {}
+  });
+  function replyURL() {
+    var wire = { v: 1, z: here, d: link.minutes, p: selected.map(function (t) { return Math.round(t / 60000); }) };
+    var who = $("who").value.trim().slice(0, 40);
+    if (who) wire.n = who;
+    if (link.name) wire.f = link.name;
+    return location.origin + "/reply#" + b64url(JSON.stringify(wire));
+  }
+  function toggle(t) {
+    var i = selected.indexOf(t);
+    if (i >= 0) selected.splice(i, 1);
+    else if (selected.length < MAX) selected.push(t);
+    else { $("count").textContent = MAX + " of " + MAX + " chosen. Tap a chosen time to swap it."; return; }
+    selected.sort(function (a, b) { return a - b; });
+    buttons.forEach(function (x) { x.setAttribute("aria-pressed", String(selected.indexOf(Number(x.dataset.t)) >= 0)); });
+    $("bar").classList.toggle("on", selected.length > 0);
+    if (!selected.length) return;
+    var list = $("chosen"); list.innerHTML = "";
+    selected.forEach(function (t) { var li = document.createElement("li"); li.textContent = when(t); list.append(li); });
+    $("count").textContent = selected.length + " of " + MAX + " chosen";
+    var one = selected.length === 1;
+    $("ics").hidden = !one;
+    var old = $("ics").getAttribute("href");
+    if (old && old.indexOf("blob:") === 0) URL.revokeObjectURL(old);
+    if (one) {
+      var t = selected[0], title = link.name ? "Meeting with " + link.name : "Meeting";
+      var ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Open Time//Pick a time//EN", "BEGIN:VEVENT",
+        "UID:" + t + "-" + Math.random().toString(36).slice(2) + "@lulls.app", "DTSTAMP:" + stamp(Date.now()),
+        "DTSTART:" + stamp(t), "DTEND:" + stamp(t + len),
+        "SUMMARY:" + title.replace(/([,;\\])/g, "\\$1"), "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
+      $("ics").href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+    }
+    document.body.style.paddingBottom = $("bar").offsetHeight + 24 + "px";
+  }
+  $("send").addEventListener("click", function () {
+    var url = replyURL(), text = selected.length === 1 ? "This time works for me:" : "These times work for me:";
+    if (navigator.share) {
+      navigator.share({ text: text, url: url }).catch(function () {});
+      return;
+    }
+    var all = text + "\n" + selected.map(when).join("\n") + "\n" + url;
+    (navigator.clipboard ? navigator.clipboard.writeText(all) : Promise.reject()).then(function () {
+      $("send").textContent = "Copied. Paste it to " + (link.name || "them");
+      setTimeout(function () { $("send").textContent = "Send my times"; }, 2400);
+    }, function () { window.prompt("Copy this reply:", all); });
+  });
+})();
+</script>
+</body>
+</html>

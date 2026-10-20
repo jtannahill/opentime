@@ -1,0 +1,16 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["P3ZC6ZG46V.com.jamestannahill.CalendarAvailability"],
+        "components": [
+          { "/": "/pick*", "comment": "Pick-a-time links open in Open Time when it is installed" },
+          { "/": "/reply*", "comment": "Replies to a pick-a-time link open in Open Time when it is installed" }
+        ]
+      }
+    ]
+  },
+  "appclips": {
+    "apps": ["P3ZC6ZG46V.com.jamestannahill.CalendarAvailability.Clip"]
+  }
+}

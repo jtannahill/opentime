@@ -1,0 +1,6 @@
+What's new in 2.1:
+
+- Pick-a-time links. Share a link and the other person taps a time that suits them, in their own time zone. It opens instantly on iPhone without installing anything, and in any browser elsewhere. The times travel inside the link, so nothing passes through a server.
+- Your settings, always in view. The work hours and calendars in use now sit under the title. Tap either to change it.
+- More accurate free time. Events that span several days now block every day they cover, declined invites and events marked Free no longer count, all-day events count only when marked Busy, and times that have already passed today are hidden. This applies to the app, widget, iMessage, Share and Live Activity.
+- Weekends open on next week instead of an empty screen.

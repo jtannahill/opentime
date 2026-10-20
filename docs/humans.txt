@@ -1,0 +1,15 @@
+/* TEAM */
+Developer: James Tannahill
+Site: https://jamestannahill.com
+From: New York, NY
+
+/* SITE */
+Last update: 2026-05-22
+Standards: HTML5, CSS3, JSON-LD (Schema.org)
+Components: System fonts only. No third-party scripts. No analytics. No cookies.
+Hosting: Cloudflare Pages
+
+/* APP */
+OpenTime: https://apps.apple.com/us/app/opentime/id6760204246
+Platforms: iPhone, iPad, Apple Watch
+Privacy: On-device. Zero data collection.
