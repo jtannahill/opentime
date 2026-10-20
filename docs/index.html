@@ -244,11 +244,13 @@
   .tools + .small { margin-top: 28px; max-width: 46ch; }
   .seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--field); }
   .seg button {
-    min-height: 40px; padding: 0 18px; border: 0; border-radius: 999px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 40px; padding: 0 16px 0 10px; border: 0; border-radius: 999px; cursor: pointer;
     font: 600 0.9375rem/1 inherit; font-family: inherit; color: var(--text-2); background: transparent;
     transition: background-color 160ms ease, color 160ms ease;
   }
   .seg button[aria-selected="true"] { background: var(--text); color: var(--bg); }
+  .seg img { width: 20px; height: 20px; border-radius: 5px; display: block; }
   @media (hover: hover) and (pointer: fine) { .seg button[aria-selected="false"]:hover { color: var(--text); } }
   .panel { margin-top: 16px; }
   .panel video { display: block; width: 100%; height: auto; border-radius: 20px; background: #141414; }
@@ -405,9 +407,9 @@
       </div>
       <div class="assistants rise" style="--d:100ms">
         <div class="seg" role="tablist" aria-label="Assistant">
-          <button type="button" role="tab" id="tab-claude" aria-selected="true" aria-controls="panel-claude">Claude</button>
-          <button type="button" role="tab" id="tab-cursor" aria-selected="false" aria-controls="panel-cursor" tabindex="-1">Cursor</button>
-          <button type="button" role="tab" id="tab-grok" aria-selected="false" aria-controls="panel-grok" tabindex="-1">Grok Bot</button>
+          <button type="button" role="tab" id="tab-claude" aria-selected="true" aria-controls="panel-claude"><img src="/img/logo-claude.png" alt="" width="20" height="20">Claude</button>
+          <button type="button" role="tab" id="tab-cursor" aria-selected="false" aria-controls="panel-cursor" tabindex="-1"><img src="/img/logo-cursor.png" alt="" width="20" height="20">Cursor</button>
+          <button type="button" role="tab" id="tab-grok" aria-selected="false" aria-controls="panel-grok" tabindex="-1"><img src="/img/logo-grokbot.png" alt="" width="20" height="20">Grok Bot</button>
         </div>
         <div class="panel" id="panel-claude" role="tabpanel" aria-labelledby="tab-claude">
           <video src="/img/claude-mcp.mp4" poster="/img/claude-mcp.jpg" muted loop playsinline preload="none" width="1080" height="1076" data-toggle="t-claude" aria-label="A real session in Claude, sped up: adding OpenTime as a custom connector, asking for a pick-a-time link for Maya, Maya choosing three times, and Claude reading her reply"></video>

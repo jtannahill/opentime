@@ -24,13 +24,13 @@ No more typing a list of times into a message that goes stale the moment either 
 
 If your assistant can see your calendar, like Claude with Google Calendar connected, it can find the gaps and send the link for you. **Make a link** from free time it already knows, ready to paste into a message or an email. **Read one back:** paste a link or a reply someone sent you and it lists the times in your time zone. **Answer one:** it finds the times that suit you both and makes the reply. **Confirm it:** it makes the link that puts the meeting on their calendar. The server stores nothing and never sees your calendar: the assistant hands it only the free times.
 
-**Claude:** Settings, then Connectors, then add a custom connector with the URL `https://lulls.app/mcp`.
+<img src="docs/img/logo-claude.png" width="18" height="18" alt=""> **Claude:** Settings, then Connectors, then add a custom connector with the URL `https://lulls.app/mcp`.
 
-**Cursor:** one click installs it.
+<img src="docs/img/logo-cursor.png" width="18" height="18" alt=""> **Cursor:** one click installs it.
 
 <a href="cursor://anysphere.cursor-deeplink/mcp/install?name=OpenTime&config=eyJ1cmwiOiJodHRwczovL2x1bGxzLmFwcC9tY3AifQ%3D%3D"><img src="docs/img/add-to-cursor.svg" alt="Add OpenTime to Cursor" height="32"></a>
 
-**Grok Bot:** ask it to use `https://lulls.app/mcp`; it offers to add it as a custom connector, then makes the link.
+<img src="docs/img/logo-grokbot.png" width="18" height="18" alt=""> **Grok Bot:** ask it to use `https://lulls.app/mcp`; it offers to add it as a custom connector, then makes the link.
 
 <p>
   <a href="https://lulls.app/img/cursor-mcp.mp4"><img src=".github/readme/cursor-mcp.jpg" width="48%" alt="Cursor's agent making Maya a pick-a-time link with OpenTime"></a>
