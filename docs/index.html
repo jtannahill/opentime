@@ -276,7 +276,9 @@
   .on-video.paused .i-play { display: block; }
   @media (prefers-reduced-transparency: reduce) { .clip-toggle.on-video { background: #141414; -webkit-backdrop-filter: none; backdrop-filter: none; } }
   .copy-mcp { min-width: 92px; justify-content: center; }
-  .setup { min-height: 112px; align-content: start; }
+  .setup { min-height: 0; }
+  .first-step .copy-row { margin-top: 14px; }
+  @media (max-width: 699px) { .panel video { aspect-ratio: 4 / 5; } }
   .setup { margin-top: 18px; display: grid; gap: 12px; }
   .setup p { max-width: 54ch; }
   .setup code, .copy-row code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.95em; color: var(--text); }
@@ -285,8 +287,7 @@
   .copy-row .go { border: 0; font: inherit; font-weight: 650; cursor: pointer; }
   .badge-cursor { display: inline-block; line-height: 0; }
   .badge-cursor img { height: 44px; width: auto; }
-  .copy-row.touch-only { display: none; }
-  @media (hover: none) and (pointer: coarse) { .badge-cursor { display: none; } .copy-row.touch-only { display: flex; } }
+  @media (hover: none) and (pointer: coarse) { .badge-cursor { display: none; } }
 
   /* Everywhere: a plain two-column list, no numbers. */
   .everywhere .wrap { display: grid; gap: 48px; }
@@ -424,7 +425,11 @@
         <h2 id="assist-title" class="rise">Or ask your assistant.</h2>
         <p class="rise" style="--d:80ms">If your assistant can see your calendar, it can find the gaps and send the link for you. Add OpenTime once, then ask in plain words.</p>
         <div class="tools">
-          <p class="rise" style="--d:120ms"><strong>Make a link</strong>From free time your assistant already knows, ready to paste into a message or an email.</p>
+          <div class="rise first-step" style="--d:120ms">
+            <p><strong>Add it once</strong>Give your assistant this address. Each app's way is under its video.</p>
+            <div class="copy-row"><code>https://lulls.app/mcp</code><button type="button" class="go copy-mcp">Copy</button></div>
+          </div>
+          <p class="rise" style="--d:150ms"><strong>Make a link</strong>From free time your assistant already knows, ready to paste into a message or an email.</p>
           <p class="rise" style="--d:160ms"><strong>Read the reply</strong>Paste what they send back and it lists their picks in your time zone.</p>
           <p class="rise" style="--d:200ms"><strong>Confirm it</strong>Pick one and it makes the link that puts the meeting on their calendar.</p>
         </div>
@@ -438,25 +443,22 @@
           <button type="button" role="tab" id="tab-grok" aria-selected="false" aria-controls="panel-grok" tabindex="-1"><img src="/img/logo-grokbot.png" alt="" width="20" height="20">Grok Bot</button>
         </div>
         <div class="panel" id="panel-claude" role="tabpanel" aria-labelledby="tab-claude">
-          <div class="frame"><video src="/img/claude-mcp.mp4" poster="/img/claude-mcp.jpg" muted loop playsinline preload="none" width="1080" height="1076" data-toggle="t-claude" aria-label="A real session in Claude, sped up: adding OpenTime as a custom connector, asking for a pick-a-time link for Maya, Maya choosing three times, and Claude reading her reply"></video><button type="button" class="clip-toggle on-video" id="t-claude" aria-label="Pause" hidden><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path class="i-pause" d="M4 2.5h2.6v11H4zM9.4 2.5H12v11H9.4z"/><path class="i-play" d="M4.5 2.3 13 8l-8.5 5.7z"/></svg></button></div>
+          <div class="frame"><video poster="/img/claude-mcp.jpg" data-poster-phone="/img/claude-mcp-phone.jpg" muted loop playsinline preload="none" width="1080" height="1076" data-toggle="t-claude" aria-label="A real session in Claude, sped up: adding OpenTime as a custom connector, asking for a pick-a-time link for Maya, Maya choosing three times, and Claude reading her reply"><source src="/img/claude-mcp-phone.mp4" type="video/mp4" media="(max-width: 699px)"><source src="/img/claude-mcp.mp4" type="video/mp4"></video><button type="button" class="clip-toggle on-video" id="t-claude" aria-label="Pause" hidden><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path class="i-pause" d="M4 2.5h2.6v11H4zM9.4 2.5H12v11H9.4z"/><path class="i-play" d="M4.5 2.3 13 8l-8.5 5.7z"/></svg></button></div>
           <div class="setup">
-            <p>In Claude, open Settings, then Connectors, and add a custom connector:</p>
-            <div class="copy-row"><code>https://lulls.app/mcp</code><button type="button" class="go copy-mcp">Copy</button></div>
+            <p>In Claude, open Settings, then Connectors, and add it as a custom connector.</p>
           </div>
         </div>
         <div class="panel" id="panel-cursor" role="tabpanel" aria-labelledby="tab-cursor" hidden>
-          <div class="frame"><video src="/img/cursor-mcp.mp4" poster="/img/cursor-mcp.jpg" muted loop playsinline preload="none" width="1080" height="1076" data-toggle="t-cursor" aria-label="A real session in Cursor, sped up: installing OpenTime from an Add to Cursor link and asking Cursor's agent for a pick-a-time link for Maya"></video><button type="button" class="clip-toggle on-video" id="t-cursor" aria-label="Pause" hidden><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path class="i-pause" d="M4 2.5h2.6v11H4zM9.4 2.5H12v11H9.4z"/><path class="i-play" d="M4.5 2.3 13 8l-8.5 5.7z"/></svg></button></div>
+          <div class="frame"><video poster="/img/cursor-mcp.jpg" data-poster-phone="/img/cursor-mcp-phone.jpg" muted loop playsinline preload="none" width="1080" height="1076" data-toggle="t-cursor" aria-label="A real session in Cursor, sped up: installing OpenTime from an Add to Cursor link and asking Cursor's agent for a pick-a-time link for Maya"><source src="/img/cursor-mcp-phone.mp4" type="video/mp4" media="(max-width: 699px)"><source src="/img/cursor-mcp.mp4" type="video/mp4"></video><button type="button" class="clip-toggle on-video" id="t-cursor" aria-label="Pause" hidden><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path class="i-pause" d="M4 2.5h2.6v11H4zM9.4 2.5H12v11H9.4z"/><path class="i-play" d="M4.5 2.3 13 8l-8.5 5.7z"/></svg></button></div>
           <div class="setup">
-            <p>One click installs it in Cursor on your Mac or PC. Then ask its agent for a link.</p>
-            <div class="copy-row touch-only"><code>https://lulls.app/mcp</code><button type="button" class="go copy-mcp">Copy</button></div>
+            <p>On your Mac or PC, one click installs it in Cursor. Then ask its agent for a link.</p>
             <div class="copy-row"><a class="badge-cursor" href="cursor://anysphere.cursor-deeplink/mcp/install?name=OpenTime&amp;config=eyJ1cmwiOiJodHRwczovL2x1bGxzLmFwcC9tY3AifQ%3D%3D"><img src="/img/add-to-cursor.svg" alt="Add OpenTime to Cursor" width="144" height="32"></a></div>
           </div>
         </div>
         <div class="panel" id="panel-grok" role="tabpanel" aria-labelledby="tab-grok" hidden>
-          <div class="frame"><video src="/img/grok-mcp.mp4" poster="/img/grok-mcp.jpg" muted loop playsinline preload="none" width="1080" height="1076" data-toggle="t-grok" aria-label="A real session in Grok Bot, sped up: Grok Bot adding OpenTime as a custom connector, making a pick-a-time link, reading Maya's reply and making her confirmation link"></video><button type="button" class="clip-toggle on-video" id="t-grok" aria-label="Pause" hidden><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path class="i-pause" d="M4 2.5h2.6v11H4zM9.4 2.5H12v11H9.4z"/><path class="i-play" d="M4.5 2.3 13 8l-8.5 5.7z"/></svg></button></div>
+          <div class="frame"><video poster="/img/grok-mcp.jpg" data-poster-phone="/img/grok-mcp-phone.jpg" muted loop playsinline preload="none" width="1080" height="1076" data-toggle="t-grok" aria-label="A real session in Grok Bot, sped up: Grok Bot adding OpenTime as a custom connector, making a pick-a-time link, reading Maya's reply and making her confirmation link"><source src="/img/grok-mcp-phone.mp4" type="video/mp4" media="(max-width: 699px)"><source src="/img/grok-mcp.mp4" type="video/mp4"></video><button type="button" class="clip-toggle on-video" id="t-grok" aria-label="Pause" hidden><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path class="i-pause" d="M4 2.5h2.6v11H4zM9.4 2.5H12v11H9.4z"/><path class="i-play" d="M4.5 2.3 13 8l-8.5 5.7z"/></svg></button></div>
           <div class="setup">
-            <p>Ask Grok Bot to use this address. It offers to add it as a custom connector, then makes the link.</p>
-            <div class="copy-row"><code>https://lulls.app/mcp</code><button type="button" class="go copy-mcp">Copy</button></div>
+            <p>Ask Grok Bot to use the address. It offers to add it as a custom connector, then makes the link.</p>
           </div>
         </div>
       </div>
@@ -644,6 +646,10 @@
     });
   }, 2000);
 
+  // Phone posters match the 4:5 phone cuts.
+  if (matchMedia("(max-width: 699px)").matches) {
+    [].forEach.call(document.querySelectorAll("video[data-poster-phone]"), function (v) { v.poster = v.dataset.posterPhone; });
+  }
   // Videos play only while visible, never under Reduce Motion, and each can be paused (WCAG 2.2.2).
   var mq = matchMedia("(prefers-reduced-motion: reduce)");
   [].forEach.call(document.querySelectorAll("video[data-toggle]"), function (v) {
