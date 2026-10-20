@@ -21,7 +21,7 @@ On this site, the pick-a-time link, with the free times living inside it, become
 - `bg` is the page ground and the browser theme colour.
 - `field` and `field-2` are tone steps for surfaces: the link maker, the "Send a link. They pick." band, and pressed or switched-off controls. Surfaces are separated by tone, never by a line or a shadow.
 - `text` is for headings and all running text. `text-2` is only for secondary notes (hints, the version note, footer links).
-- `accent` appears on the one primary action in each place (the bar's Get it button, Open this link, Copy a reply on /pick) and on one field: the privacy band, where text sits in `bg`. Nowhere else.
+- `accent` appears on the one primary action in each place (the bar's Get it button, Open this link, Copy on the MCP URL in the assistant section, Copy a reply on /pick) and on one field: the privacy band, where text sits in `bg`. Nowhere else.
 - `screen` is the white behind app screenshots so their rounded phone corners read cleanly.
 
 ## Typography
@@ -30,7 +30,7 @@ System faces only (SF Pro Display for headings, SF Pro Text for body); no web fo
 
 ## Layout
 
-One 1240px column with a fluid gutter. Sections are separated by large vertical space (88 to 176px), never by rules. From 1000px the hero splits into copy and the link maker; from 900px the week section sets the large app picture beside its text. Neighbouring sections use different compositions: split, band with a picture pair, heading beside a two-column list, a full accent field with one statement, a question list. The footer closes with the name at full width.
+One 1240px column with a fluid gutter. Sections are separated by large vertical space (88 to 176px), never by rules. From 1000px the hero splits into copy and the link maker; from 900px the week section sets the large app picture beside its text. Neighbouring sections use different compositions: split, band with a picture pair, split with an example conversation on a field (the assistant section, linked from the bar as Assistants), heading beside a two-column list, a full accent field with one statement, a question list. The footer closes with the name at full width.
 
 ## Imagery
 

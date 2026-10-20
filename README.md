@@ -16,6 +16,18 @@ $0.99, once. No subscription, no account. iPhone, iPad and Apple Watch. [lulls.a
 
 No more typing a list of times into a message that goes stale the moment either calendar moves, and no booking page that asks them to make an account.
 
+## Or ask your assistant
+
+<img src=".github/readme/assistant.jpg" width="70%" alt="An example conversation: you ask Claude to find 30 minutes with Maya next week and make her a pick-a-time link; Claude lists your free times and replies with a lulls.app/pick link">
+
+If your assistant can see your calendar, like Claude with Google Calendar connected, it can find the gaps and send the link for you. Add OpenTime once, then ask in plain words. (The conversation above is an example.)
+
+**Set it up:** in Claude, open Settings, then Connectors, and add a custom connector with the URL `https://lulls.app/mcp`. It works with any assistant that supports MCP.
+
+**Make a link** from free time your assistant already knows, ready to paste into a message or an email. **Read one back:** paste a link or a reply someone sent you and it lists the times in your time zone, or checks them against your calendar.
+
+The server stores nothing and never sees your calendar: the assistant hands it only the free times.
+
 ## Your week at a glance
 
 <img src=".github/readme/glance.jpg" width="70%" alt="The week in OpenTime with free times as chips and meetings listed, the Home Screen widget, and OpenTime on Apple Watch">
@@ -41,10 +53,6 @@ The Home Screen widget, a Live Activity and the Dynamic Island, Apple Watch, the
 ## Nothing leaves the phone
 
 The app makes no network connections. There is no account, no analytics and no tracking. A pick-a-time link carries only the free times you chose, in the part of the URL a browser never sends to a server, and a reply carries only the times they picked.
-
-## Ask your assistant for a link
-
-Add `https://lulls.app/mcp` to Claude or any assistant that supports MCP. It can turn free time it already knows into a pick-a-time link, or read a link or reply someone sent you. It stores nothing and never sees a calendar.
 
 ## Build it yourself
 

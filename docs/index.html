@@ -234,8 +234,24 @@
   .pair figure .phone { max-width: 380px; }
   .pair figcaption { margin-top: 20px; max-width: 34ch; }
   .pair figcaption strong { display: block; font-size: 1.25rem; margin-bottom: 4px; }
-  .mcp { margin-top: 88px; display: grid; gap: 16px; max-width: 760px; }
-  .mcp code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.95em; color: var(--text); }
+
+  /* Assistant: the pitch and the connector beside an example conversation on a field. */
+  .assist .wrap { display: grid; gap: 56px; }
+  @media (min-width: 1000px) { .assist .wrap { grid-template-columns: 1fr 1fr; align-items: center; gap: 80px; } }
+  .assist h2 + p { margin-top: 28px; }
+  .connect { margin-top: 36px; display: grid; gap: 14px; }
+  .copy-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+  .copy-row code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 1.125rem; color: var(--text); background: var(--field); padding: 12px 16px; border-radius: 12px; }
+  .copy-row .go { border: 0; font: inherit; font-weight: 650; cursor: pointer; }
+  .tools { margin-top: 40px; display: grid; gap: 24px; }
+  @media (min-width: 640px) { .tools { grid-template-columns: 1fr 1fr; gap: 32px; } }
+  .tools strong, .connect strong { display: block; font-size: 1.25rem; margin-bottom: 4px; letter-spacing: -0.01em; }
+  .chat { background: var(--field); padding: clamp(22px, 3vw, 36px); display: grid; gap: 10px; }
+  .chat .who { color: var(--text-2); font-size: 0.9375rem; margin-top: 8px; }
+  .chat .msg { background: var(--field-2); border-radius: 20px; padding: 16px 18px; display: grid; gap: 10px; max-width: none; }
+  .chat .mine { background: var(--text); color: var(--bg); justify-self: end; max-width: 30ch; }
+  .chat .url a { color: var(--text); font-weight: 600; text-decoration-color: var(--text-2); }
+  .chat figcaption { margin-top: 10px; }
 
   /* Everywhere: a plain two-column list, no numbers. */
   .everywhere .wrap { display: grid; gap: 48px; }
@@ -296,6 +312,7 @@
   <a class="wordmark" href="/"><img src="/icon-512.png" alt="" width="32" height="32">OpenTime</a>
   <nav aria-label="Site">
     <a href="#week">The app</a>
+    <a href="#assistant">Assistants</a>
     <a href="#privacy">Privacy</a>
     <a class="action" href="https://apps.apple.com/us/app/opentime/id6760204246">Get it, $0.99</a>
   </nav>
@@ -362,13 +379,40 @@
           <figcaption><strong>They pick, you confirm</strong>They choose up to five times in their own time zone and send them back with one tap. Open the reply in OpenTime, confirm one and add it to your calendar.</figcaption>
         </figure>
       </div>
-      <div class="mcp rise">
-        <h3>Ask your assistant for one</h3>
-        <p>Add <code>https://lulls.app/mcp</code> to Claude or any assistant that supports MCP. It can turn free time it already knows into a pick-a-time link, or read one someone sent you. It stores nothing and never sees a calendar.</p>
-      </div>
     </div>
   </section>
 
+  <section class="assist" id="assistant" aria-labelledby="assist-title">
+    <div class="wrap">
+      <div>
+        <h2 id="assist-title" class="rise">Or ask your assistant.</h2>
+        <p class="rise" style="--d:80ms">If your assistant can see your calendar, like Claude with Google Calendar connected, it can find the gaps and send the link for you. Add OpenTime once, then ask in plain words.</p>
+        <div class="connect rise" style="--d:120ms">
+          <p>In Claude, open Settings, then Connectors, and add a custom connector with this URL:</p>
+          <div class="copy-row">
+            <code id="mcp-url">https://lulls.app/mcp</code>
+            <button type="button" class="go" id="copy-mcp">Copy</button>
+          </div>
+          <p class="small">It works with any assistant that supports MCP. It stores nothing and never sees your calendar: the assistant hands it only the free times.</p>
+        </div>
+        <div class="tools">
+          <p class="rise" style="--d:160ms"><strong>Make a link</strong>From free time your assistant already knows, ready to paste into a message or an email.</p>
+          <p class="rise" style="--d:200ms"><strong>Read one back</strong>Paste a link or a reply someone sent you and it lists the times in your time zone, or checks them against your calendar.</p>
+        </div>
+      </div>
+      <figure class="chat rise" style="--d:100ms" aria-labelledby="chat-caption">
+        <p class="who">You</p>
+        <p class="msg mine">Find 30 minutes for me and Maya next week and make her a pick-a-time link.</p>
+        <p class="who">Claude</p>
+        <div class="msg">
+          <p id="assist-free">You are free three times next week. Here is a link Maya can pick from:</p>
+          <p class="url"><a id="assist-link" href="/pick">lulls.app/pick</a></p>
+          <p>She chooses up to five times in her own time zone and sends them back to you.</p>
+        </div>
+        <figcaption id="chat-caption" class="small">An example conversation. The link in it is real: open it to see what Maya would see.</figcaption>
+      </figure>
+    </div>
+  </section>
   <section class="everywhere" aria-labelledby="everywhere-title">
     <div class="wrap">
       <div>
@@ -478,6 +522,38 @@
     go.setAttribute("aria-disabled", String(!on.length));
   }
   update();
+
+  // The assistant example: next week's Tuesday to Thursday, encoded the same way the MCP server encodes it.
+  (function () {
+    var link = document.getElementById("assist-link");
+    if (!link) return;
+    var start = new Date(); start.setHours(0, 0, 0, 0);
+    start.setDate(start.getDate() + ((8 - start.getDay()) % 7 || 7)); // next Monday
+    var spans = [[1, 10, 0, 120], [2, 14, 0, 150], [3, 9, 30, 90]];
+    var hm = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" });
+    var said = [];
+    var s = spans.map(function (p) {
+      var t = new Date(start); t.setDate(t.getDate() + p[0]); t.setHours(p[1], p[2], 0, 0);
+      said.push(dayFmt.format(t) + " " + hm.format(t) + " to " + hm.format(t.getTime() + p[3] * 60000));
+      return [Math.round(t.getTime() / 60000), p[3]];
+    });
+    var wire = { v: 1, n: "Jamie", z: zone, d: 30, s: s };
+    var frag = btoa(String.fromCharCode.apply(null, new TextEncoder().encode(JSON.stringify(wire))))
+      .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    link.href = "/pick#" + frag;
+    link.textContent = "lulls.app/pick#" + frag.slice(0, 24) + "\u2026";
+    document.getElementById("assist-free").textContent =
+      "You are free " + said[0] + ", " + said[1] + " and " + said[2] + ". Here is a link Maya can pick from:";
+  })();
+  var copy = document.getElementById("copy-mcp");
+  if (copy && navigator.clipboard) {
+    copy.addEventListener("click", function () {
+      navigator.clipboard.writeText("https://lulls.app/mcp").then(function () {
+        copy.textContent = "Copied";
+        setTimeout(function () { copy.textContent = "Copy"; }, 1600);
+      });
+    });
+  } else if (copy) { copy.hidden = true; }
 
   // Entrances, once per element as it comes into view.
   if ("IntersectionObserver" in window) {
