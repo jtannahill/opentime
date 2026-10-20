@@ -241,7 +241,7 @@
   .assist h2 + p { margin-top: 28px; }
   .tools { margin-top: 36px; display: grid; gap: 22px; }
   .tools strong { display: block; font-size: 1.25rem; margin-bottom: 2px; letter-spacing: -0.01em; }
-  .tools + .small { margin-top: 28px; max-width: 46ch; }
+  .tools + .small { margin-top: 28px; max-width: 46ch; color: var(--text); }
   .seg { position: relative; display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--field); }
   /* The selected pill slides to the chosen tab, from wherever it is now. */
   .seg-pill { position: absolute; inset: 4px 0; background: var(--text);
@@ -260,6 +260,8 @@
   .seg button[aria-selected="true"] { color: var(--bg); }
   html:not(.js) .seg button[aria-selected="true"] { background: var(--text); }
   .seg img { width: 20px; height: 20px; border-radius: 5px; display: block; }
+  /* A faint edge so dark app icons hold their shape on the dark control. */
+  .seg button[aria-selected="false"] img { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22); }
   @media (hover: hover) and (pointer: fine) { .seg button[aria-selected="false"]:hover { color: var(--text); } }
   .panel { margin-top: 16px; }
   .panel.entering { animation: panel-in 200ms var(--ease-out); }
