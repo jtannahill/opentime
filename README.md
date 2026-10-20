@@ -18,15 +18,35 @@ No more typing a list of times into a message that goes stale the moment either 
 
 ## Or ask your assistant
 
-<img src=".github/readme/assistant.jpg" width="70%" alt="An example conversation: you ask Claude to find 30 minutes with Maya next week and make her a pick-a-time link; Claude lists your free times and replies with a lulls.app/pick link">
+<a href="https://lulls.app/img/claude-mcp.mp4"><img src=".github/readme/claude-mcp.jpg" width="70%" alt="Claude reading Maya's reply: Maya picked three times, Tuesday Oct 27 10:30, Wednesday Oct 28 3:00 and Thursday Oct 29 9:30, all in New York time"></a>
 
-If your assistant can see your calendar, like Claude with Google Calendar connected, it can find the gaps and send the link for you. Add OpenTime once, then ask in plain words. (The conversation above is an example.)
+[Watch the one-minute recording](https://lulls.app/img/claude-mcp.mp4): a real session in Claude, sped up. OpenTime goes in as a custom connector, Claude makes a link for Maya, Maya picks three times on the link page, and Claude reads her reply back.
 
-**Set it up:** in Claude, open Settings, then Connectors, and add a custom connector with the URL `https://lulls.app/mcp`. It works with any assistant that supports MCP.
+If your assistant can see your calendar, like Claude with Google Calendar connected, it can find the gaps and send the link for you. **Make a link** from free time it already knows, ready to paste into a message or an email. **Read one back:** paste a link or a reply someone sent you and it lists the times in your time zone, or checks them against your calendar. The server stores nothing and never sees your calendar: the assistant hands it only the free times.
 
-**Make a link** from free time your assistant already knows, ready to paste into a message or an email. **Read one back:** paste a link or a reply someone sent you and it lists the times in your time zone, or checks them against your calendar.
+**Claude:** Settings, then Connectors, then add a custom connector with the URL `https://lulls.app/mcp`.
 
-The server stores nothing and never sees your calendar: the assistant hands it only the free times.
+**Cursor:** add it to `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "opentime": { "url": "https://lulls.app/mcp" }
+  }
+}
+```
+
+**Grok:** in the xAI API, pass it as a remote MCP tool:
+
+```json
+"tools": [{
+  "type": "mcp",
+  "server_label": "opentime",
+  "server_url": "https://lulls.app/mcp"
+}]
+```
+
+Any other assistant or agent that speaks MCP over HTTP can use the same URL. There is no sign-in and no key.
 
 ## Your week at a glance
 

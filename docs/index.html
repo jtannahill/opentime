@@ -76,7 +76,7 @@
           ],
           "image": "https://lulls.app/og-image.png",
           "screenshot": "https://lulls.app/screenshot-availability.jpg",
-          "video": { "@type": "VideoObject", "name": "Picking times from an OpenTime link", "description": "The other person opens a pick-a-time link, chooses up to five times that suit them and sends them back; the sender opens the reply in OpenTime and confirms one.", "contentUrl": "https://lulls.app/img/pick-clip.mp4", "thumbnailUrl": "https://lulls.app/img/pick-clip.jpg", "uploadDate": "2026-10-20", "duration": "PT10S" },
+          "video": [{ "@type": "VideoObject", "name": "Picking times from an OpenTime link", "description": "The other person opens a pick-a-time link, chooses up to five times that suit them and sends them back; the sender opens the reply in OpenTime and confirms one.", "contentUrl": "https://lulls.app/img/pick-clip.mp4", "thumbnailUrl": "https://lulls.app/img/pick-clip.jpg", "uploadDate": "2026-10-20", "duration": "PT10S" }, { "@type": "VideoObject", "name": "OpenTime in Claude", "description": "A real Claude session: adding OpenTime as a custom connector, asking for a pick-a-time link, the other person picking times, and Claude reading the reply.", "contentUrl": "https://lulls.app/img/claude-mcp.mp4", "thumbnailUrl": "https://lulls.app/img/claude-mcp.jpg", "uploadDate": "2026-10-20", "duration": "PT66S" }],
           "description": "Private iOS, iPad, and Apple Watch app that reads your calendars on-device and shows open time slots. Natural-language queries via Apple Intelligence on supported devices. No accounts, no servers, no tracking.",
           "applicationCategory": "ProductivityApplication",
           "applicationSubCategory": "Calendar",
@@ -246,12 +246,17 @@
   .tools { margin-top: 40px; display: grid; gap: 24px; }
   @media (min-width: 640px) { .tools { grid-template-columns: 1fr 1fr; gap: 32px; } }
   .tools strong, .connect strong { display: block; font-size: 1.25rem; margin-bottom: 4px; letter-spacing: -0.01em; }
-  .chat { background: var(--field); padding: clamp(22px, 3vw, 36px); display: grid; gap: 10px; }
-  .chat .who { color: var(--text-2); font-size: 0.9375rem; margin-top: 8px; }
-  .chat .msg { background: var(--field-2); border-radius: 20px; padding: 16px 18px; display: grid; gap: 10px; max-width: none; }
-  .chat .mine { background: var(--text); color: var(--bg); justify-self: end; max-width: 30ch; }
-  .chat .url a { color: var(--text); font-weight: 600; text-decoration-color: var(--text-2); }
-  .chat figcaption { margin-top: 10px; }
+  .demo video { display: block; width: 100%; height: auto; border-radius: 20px; background: #1b1b1b; }
+  .demo figcaption { margin-top: 14px; max-width: 52ch; }
+  .elsewhere { grid-column: 1 / -1; margin-top: 24px; }
+  .clients { display: grid; gap: 28px; margin-top: 24px; }
+  @media (min-width: 900px) { .clients { grid-template-columns: 1fr 1fr; gap: 48px; } }
+  .anything { margin-top: 28px; }
+  .anything code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.95em; }
+  .clients strong { display: block; font-size: 1.25rem; margin-bottom: 4px; letter-spacing: -0.01em; }
+  .clients code, .connect code { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .clients p code { font-size: 0.95em; }
+  .clients pre { margin-top: 14px; background: var(--field); padding: 16px 18px; border-radius: 12px; font-size: 0.875rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
 
   /* Everywhere: a plain two-column list, no numbers. */
   .everywhere .wrap { display: grid; gap: 48px; }
@@ -374,7 +379,7 @@
           <figcaption><strong>You choose what goes in</strong>The days on screen, the meeting length and, if you like, your first name. Event names never leave your phone.</figcaption>
         </figure>
         <figure class="rise" style="--d:100ms">
-          <div class="phone"><video src="/img/pick-clip.mp4" poster="/img/pick-clip.jpg" muted loop playsinline preload="metadata" width="600" height="1300" aria-label="The other person opens the link, chooses three times, adds their name and sends them back; the reply opens in OpenTime with a Confirm this time button for each"></video></div>
+          <div class="phone"><video data-toggle="clip-toggle" src="/img/pick-clip.mp4" poster="/img/pick-clip.jpg" muted loop playsinline preload="metadata" width="600" height="1300" aria-label="The other person opens the link, chooses three times, adds their name and sends them back; the reply opens in OpenTime with a Confirm this time button for each"></video></div>
           <button type="button" class="clip-toggle" id="clip-toggle" hidden>Pause</button>
           <figcaption><strong>They pick, you confirm</strong>They choose up to five times in their own time zone and send them back with one tap. Open the reply in OpenTime, confirm one and add it to your calendar.</figcaption>
         </figure>
@@ -400,17 +405,33 @@
           <p class="rise" style="--d:200ms"><strong>Read one back</strong>Paste a link or a reply someone sent you and it lists the times in your time zone, or checks them against your calendar.</p>
         </div>
       </div>
-      <figure class="chat rise" style="--d:100ms" aria-labelledby="chat-caption">
-        <p class="who">You</p>
-        <p class="msg mine">Find 30 minutes for me and Maya next week and make her a pick-a-time link.</p>
-        <p class="who">Claude</p>
-        <div class="msg">
-          <p id="assist-free">You are free three times next week. Here is a link Maya can pick from:</p>
-          <p class="url"><a id="assist-link" href="/pick">lulls.app/pick</a></p>
-          <p>She chooses up to five times in her own time zone and sends them back to you.</p>
-        </div>
-        <figcaption id="chat-caption" class="small">An example conversation. The link in it is real: open it to see what Maya would see.</figcaption>
+      <figure class="demo rise" style="--d:100ms">
+        <video src="/img/claude-mcp.mp4" poster="/img/claude-mcp.jpg" muted loop playsinline preload="none" width="1080" height="1076" data-toggle="demo-toggle" aria-label="A real session in Claude, sped up: adding OpenTime as a custom connector, asking for a pick-a-time link for Maya, Maya choosing three times on the link page, and Claude reading her reply"></video>
+        <button type="button" class="clip-toggle" id="demo-toggle" hidden>Pause</button>
+        <figcaption class="small">A real session in Claude, sped up: adding the connector, asking for a link, Maya picking her times, and Claude reading her reply.</figcaption>
       </figure>
+      <div class="elsewhere rise">
+        <h3>In Cursor, Grok and other assistants</h3>
+        <div class="clients">
+          <div>
+            <p><strong>Cursor</strong>Add it to <code>~/.cursor/mcp.json</code>:</p>
+            <pre><code>{
+  "mcpServers": {
+    "opentime": { "url": "https://lulls.app/mcp" }
+  }
+}</code></pre>
+          </div>
+          <div>
+            <p><strong>Grok</strong>In the xAI API, pass it as a remote MCP tool:</p>
+            <pre><code>"tools": [{
+  "type": "mcp",
+  "server_label": "opentime",
+  "server_url": "https://lulls.app/mcp"
+}]</code></pre>
+          </div>
+        </div>
+        <p class="anything">Any other assistant or agent that speaks MCP over HTTP can use <code>https://lulls.app/mcp</code> the same way. There is no sign-in and no key.</p>
+      </div>
     </div>
   </section>
   <section class="everywhere" aria-labelledby="everywhere-title">
@@ -523,28 +544,6 @@
   }
   update();
 
-  // The assistant example: next week's Tuesday to Thursday, encoded the same way the MCP server encodes it.
-  (function () {
-    var link = document.getElementById("assist-link");
-    if (!link) return;
-    var start = new Date(); start.setHours(0, 0, 0, 0);
-    start.setDate(start.getDate() + ((8 - start.getDay()) % 7 || 7)); // next Monday
-    var spans = [[1, 10, 0, 120], [2, 14, 0, 150], [3, 9, 30, 90]];
-    var hm = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" });
-    var said = [];
-    var s = spans.map(function (p) {
-      var t = new Date(start); t.setDate(t.getDate() + p[0]); t.setHours(p[1], p[2], 0, 0);
-      said.push(dayFmt.format(t) + " " + hm.format(t) + " to " + hm.format(t.getTime() + p[3] * 60000));
-      return [Math.round(t.getTime() / 60000), p[3]];
-    });
-    var wire = { v: 1, n: "Jamie", z: zone, d: 30, s: s };
-    var frag = btoa(String.fromCharCode.apply(null, new TextEncoder().encode(JSON.stringify(wire))))
-      .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-    link.href = "/pick#" + frag;
-    link.textContent = "lulls.app/pick#" + frag.slice(0, 24) + "\u2026";
-    document.getElementById("assist-free").textContent =
-      "You are free " + said[0] + ", " + said[1] + " and " + said[2] + ". Here is a link Maya can pick from:";
-  })();
   var copy = document.getElementById("copy-mcp");
   if (copy && navigator.clipboard) {
     copy.addEventListener("click", function () {
@@ -572,22 +571,22 @@
     });
   }, 2000);
 
-  // The video plays only while visible, never under Reduce Motion.
-  // Plays only while visible, never under Reduce Motion, and can be paused (WCAG 2.2.2).
-  var v = document.querySelector("video"), tb = document.getElementById("clip-toggle");
-  var mq = matchMedia("(prefers-reduced-motion: reduce)"), paused = false, vis = false;
-  function sync() {
-    if (!v) return;
-    v.controls = mq.matches;
-    if (tb) { tb.hidden = mq.matches; tb.textContent = paused ? "Play" : "Pause"; }
-    if (vis && !paused && !mq.matches) v.play().catch(function () {}); else v.pause();
-  }
-  if (tb) tb.addEventListener("click", function () { paused = !paused; sync(); });
-  if (v && "IntersectionObserver" in window) {
-    new IntersectionObserver(function (es) { vis = es[es.length - 1].isIntersecting; sync(); }, { threshold: 0.3 }).observe(v);
-  }
-  mq.addEventListener("change", sync);
-  sync();
+  // Videos play only while visible, never under Reduce Motion, and each can be paused (WCAG 2.2.2).
+  var mq = matchMedia("(prefers-reduced-motion: reduce)");
+  [].forEach.call(document.querySelectorAll("video[data-toggle]"), function (v) {
+    var tb = document.getElementById(v.dataset.toggle), paused = false, vis = false;
+    function sync() {
+      v.controls = mq.matches;
+      if (tb) { tb.hidden = mq.matches; tb.textContent = paused ? "Play" : "Pause"; }
+      if (vis && !paused && !mq.matches) v.play().catch(function () {}); else v.pause();
+    }
+    if (tb) tb.addEventListener("click", function () { paused = !paused; sync(); });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) { vis = es[es.length - 1].isIntersecting; sync(); }, { threshold: 0.3 }).observe(v);
+    }
+    mq.addEventListener("change", sync);
+    sync();
+  });
 })();
 </script>
 </body>
