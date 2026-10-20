@@ -60,7 +60,7 @@ test("MCP: initialize, list, call, and notifications", () => {
   assert.ok(init.result.capabilities.tools);
   assert.equal(handleMessage({ jsonrpc: "2.0", method: "notifications/initialized" }), null);
   const list = handleMessage({ jsonrpc: "2.0", id: 2, method: "tools/list" });
-  assert.deepEqual(list.result.tools.map((t) => t.name), ["create_pick_link", "read_pick_link"]);
+  assert.deepEqual(list.result.tools.map((t) => t.name), ["create_pick_link", "read_pick_link", "create_confirmation_link"]);
   const made = handleMessage({ jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "create_pick_link", arguments: {
     free_times: [{ start: "2026-10-21T14:00:00Z", end: "2026-10-21T15:00:00Z" }], meeting_minutes: 30 } } }, NOW);
   assert.equal(made.result.isError, false);
@@ -87,4 +87,23 @@ test("reads a reply made by the web page and the app", () => {
   assert.match(out.result.content[0].text, /Ana picked 5 30-minute times for Jamie/);
   assert.throws(() => readReply("https://lulls.app/reply"), /no times/);
   assert.throws(() => readReply("https://lulls.app/pick#abc"), /Not a reply/);
+});
+
+test("a confirmation link round-trips and reads through the tool", async () => {
+  const { createConfirmation, readConfirmation } = await import("../pick.js");
+  const { callTool } = await import("../server.js");
+  const c = createConfirmation({ start: "2026-10-27T10:30:00-04:00", meetingMinutes: 30, name: "Jamie", forName: "Maya", timeZone: "America/New_York" });
+  const u = new URL(c.url);
+  assert.equal(u.pathname, "/confirmed");
+  assert.equal(u.search, "");
+  const back = readConfirmation(c.url);
+  assert.equal(back.start, "2026-10-27T14:30:00.000Z");
+  assert.equal(back.name, "Jamie");
+  assert.equal(back.forName, "Maya");
+  const made = callTool("create_confirmation_link", { start: "2026-10-27T10:30:00-04:00", time_zone: "America/New_York" });
+  assert.equal(made.isError, false);
+  assert.match(made.content[0].text, /lulls\.app\/confirmed#/);
+  const read = callTool("read_pick_link", { url: c.url });
+  assert.equal(read.structuredContent.kind, "confirmation");
+  assert.throws(() => createConfirmation({ start: "2026-10-27T10:30:00" }), /offset/);
 });

@@ -2,11 +2,11 @@
 // links. No sessions, no storage, no calendar access: every answer is
 // computed from the request alone.
 
-import { createLink, readLink, readReply, describeChoices, REPLY_PATH } from "./pick.js";
+import { createLink, readLink, readReply, createConfirmation, readConfirmation, describeChoices, REPLY_PATH, CONFIRM_PATH } from "./pick.js";
 
 export const PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"];
 
-const SERVER_INFO = { name: "open-time-pick", title: "Open Time pick-a-time links", version: "1.1.0" };
+const SERVER_INFO = { name: "open-time-pick", title: "Open Time pick-a-time links", version: "1.2.0" };
 
 const INSTRUCTIONS =
   "Open Time pick-a-time links let someone choose up to five meeting times from a set of free times and send them back as a lulls.app/reply link. " +
@@ -14,6 +14,8 @@ const INSTRUCTIONS =
   "to get a lulls.app link they can send; the recipient picks a time in their own time zone on iPhone (no install) or in any browser. " +
   "Use read_pick_link when someone shares a lulls.app/pick link, to list its times or check them against a calendar, " +
   "or a lulls.app/reply link, to see which times they picked. " +
+  "After reading a reply, ask the user which time they want if there is more than one. Then, if you have calendar tools, offer to create the event and invite the other person; " +
+  "either way, offer create_confirmation_link so the user can send them a link that adds the meeting to their calendar in one tap. " +
   "The times travel inside the link; this server stores nothing and cannot see anyone's calendar.";
 
 export const TOOLS = [
@@ -52,7 +54,7 @@ export const TOOLS = [
     name: "read_pick_link",
     title: "Read a pick-a-time link",
     description:
-      "List the meeting times offered in a lulls.app/pick link, or the up to five times someone picked in a lulls.app/reply link, " +
+      "List the meeting times offered in a lulls.app/pick link, the up to five times someone picked in a lulls.app/reply link, or the agreed time in a lulls.app/confirmed link, " +
       "as ISO times and grouped by day in a chosen time zone. Offered times already past are left out.",
     inputSchema: {
       type: "object",
@@ -64,7 +66,30 @@ export const TOOLS = [
     },
     annotations: { readOnlyHint: true, openWorldHint: false, idempotentHint: true },
   },
+  {
+    name: "create_confirmation_link",
+    title: "Create a confirmation link",
+    description:
+      "Once a time is agreed, make a lulls.app/confirmed link for the other person. It shows the meeting in their own time zone " +
+      "with buttons to add it to Apple Calendar, Google Calendar or Outlook. Use it after reading a reply, with the time the user chose.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        start: { type: "string", description: "Meeting start, ISO 8601 with an offset or Z." },
+        meeting_minutes: { type: "integer", minimum: 5, maximum: 480, default: 30, description: "How long the meeting is." },
+        name: { type: "string", maxLength: 40, description: "Optional first name of the person confirming (the user)." },
+        for_name: { type: "string", maxLength: 40, description: "Optional first name of the person it is for." },
+        time_zone: { type: "string", description: "IANA time zone of the person confirming, shown as a hint." },
+      },
+      required: ["start"],
+    },
+    annotations: { readOnlyHint: true, openWorldHint: false, idempotentHint: true },
+  },
 ];
+
+function isConfirmation(url) {
+  try { return new URL(url).pathname.startsWith(CONFIRM_PATH); } catch { return false; }
+}
 
 function isReply(url) {
   try { return new URL(url).pathname.startsWith(REPLY_PATH); } catch { return false; }
@@ -95,8 +120,31 @@ export function callTool(name, args = {}, now = Date.now()) {
         { url: r.url, free_stretches: r.slots, skipped: r.skipped },
       );
     }
+    if (name === "create_confirmation_link") {
+      const r = createConfirmation({
+        start: args.start,
+        meetingMinutes: args.meeting_minutes ?? 30,
+        name: args.name ?? null,
+        forName: args.for_name ?? null,
+        timeZone: args.time_zone ?? "UTC",
+      });
+      return text(
+        `Confirmation link for ${describeChoices([r.start], r.meetingMinutes, args.time_zone || "UTC")} (${r.meetingMinutes} minutes):\n${r.url}\n\n` +
+          "Send it to the other person; it opens with buttons to add the meeting to Apple Calendar, Google Calendar or Outlook, in their own time zone.",
+        { url: r.url, start: r.start, meeting_minutes: r.meetingMinutes },
+      );
+    }
     if (name === "read_pick_link") {
       if (typeof args.url !== "string") throw new Error("url is required.");
+      if (isConfirmation(args.url)) {
+        const r = readConfirmation(args.url);
+        const zone = args.time_zone || r.timeZone;
+        return text(
+          `Confirmed${r.name ? ` by ${r.name}` : ""}${r.forName ? ` with ${r.forName}` : ""}: ${r.meetingMinutes} minutes on ` +
+            describeChoices([r.start], r.meetingMinutes, zone) + ` (${zone}).`,
+          { kind: "confirmation", name: r.name, for_name: r.forName, meeting_minutes: r.meetingMinutes, time_zone: r.timeZone, start: r.start },
+        );
+      }
       if (isReply(args.url)) {
         const r = readReply(args.url);
         const zone = args.time_zone || r.pickerTimeZone;

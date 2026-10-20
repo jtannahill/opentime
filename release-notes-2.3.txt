@@ -1,0 +1,3 @@
+Booking the time is now one step. When someone sends their picks back, tap Confirm and invite: the new-event sheet opens with the meeting filled in, you add them as an invitee, and your calendar sends the invitation.
+
+Or tap Send confirmation. They get a link that shows the meeting in their own time zone and adds it to Apple Calendar, Google Calendar or Outlook in one tap. Like every OpenTime link, the time travels inside it, so nothing passes through a server.

@@ -10,6 +10,7 @@ export const PATH = "/pick";
 export const MAX_SLOTS = 80;
 export const REPLY_PATH = "/reply";
 export const MAX_PICKS = 5;
+export const CONFIRM_PATH = "/confirmed";
 
 function base64url(bytes) {
   let s = "";
@@ -144,4 +145,32 @@ export function describeChoices(choices, meetingMinutes, timeZone) {
     groups.get(key).push(time.format(t));
   }
   return [...groups].map(([k, v]) => `${k}: ${v.join(", ")}`).join("\n");
+}
+
+/// Builds a confirmation link for one agreed meeting time. The other person
+/// opens it to add the meeting to Apple Calendar, Google Calendar or Outlook.
+/// Mirrors ConfirmLink in PickLink.swift.
+export function createConfirmation({ start, meetingMinutes = 30, name = null, forName = null, timeZone = "UTC" }) {
+  const t = Date.parse(start);
+  if (Number.isNaN(t)) throw new Error("start must be an ISO 8601 time.");
+  if (!/(Z|[+-]\d\d:?\d\d)$/i.test(String(start).trim())) throw new Error("Give start with an offset or Z so it is unambiguous.");
+  const d = Math.round(Number(meetingMinutes));
+  if (!(d >= 5 && d <= 480)) throw new Error("meeting_minutes must be between 5 and 480.");
+  const wire = { v: 1, t: Math.round(t / 60000), d, z: validZone(timeZone) || "UTC" };
+  const n = cleanName(name), f = cleanName(forName);
+  if (n) wire.n = n;
+  if (f) wire.f = f;
+  return { url: `https://${HOST}${CONFIRM_PATH}#` + base64url(new TextEncoder().encode(JSON.stringify(wire))), start: new Date(wire.t * 60000).toISOString(), meetingMinutes: d };
+}
+
+/// Reads a confirmation link back.
+export function readConfirmation(url) {
+  let u;
+  try { u = new URL(url); } catch { throw new Error("That is not a URL."); }
+  if (u.hostname !== HOST && u.hostname !== `www.${HOST}`) throw new Error("Not a lulls.app link.");
+  if (u.pathname !== CONFIRM_PATH && u.pathname !== CONFIRM_PATH + "/") throw new Error("Not a confirmation (expected lulls.app/confirmed#...).");
+  let wire;
+  try { wire = JSON.parse(new TextDecoder().decode(fromBase64url(u.hash.slice(1)))); } catch { throw new Error("The confirmation could not be read; it may have been cut short."); }
+  if (wire?.v !== 1 || !Number.isFinite(wire.t) || !(wire.d >= 5 && wire.d <= 480)) throw new Error("The confirmation is not in a format this server understands.");
+  return { name: cleanName(wire.n), forName: cleanName(wire.f), timeZone: validZone(wire.z) || "UTC", meetingMinutes: wire.d, start: new Date(wire.t * 60000).toISOString() };
 }

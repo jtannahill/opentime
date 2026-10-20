@@ -12,7 +12,9 @@ A link (`https://lulls.app/pick#...`) carries free times in the URL fragment, en
 
 A reply (`https://lulls.app/reply#...`, `PickReply` in the same file) carries only the chosen times, the meeting length, an optional name and the picker's time zone. It opens in the app (`PickReplyView`) or `docs/reply.html`. Universal links for `/pick*` and `/reply*` and the App Clip association are in `docs/.well-known/apple-app-site-association`.
 
-The MCP server is a Pages Function (`functions/mcp.js`, logic in `mcp/`) with two tools, `create_pick_link` and `read_pick_link`. `mcp/pick.js` mirrors the Swift wire format; `node --test mcp/test/pick.test.js` and the Swift `PickLinkTests` check both directions.
+A confirmation (`https://lulls.app/confirmed#...`, `ConfirmLink` in the same file) carries one agreed start time, the meeting length, both first names and the confirmer's time zone. `docs/confirmed.html` shows it in the reader's time zone with Add to Calendar (.ics), Google Calendar and Outlook buttons. The app's "Send confirmation" and the reply page's "Confirm this time" include it; "Confirm and invite" opens the system new-event sheet (`EventEditSheet`), so the user's own calendar account sends the invitation.
+
+The MCP server is a Pages Function (`functions/mcp.js`, logic in `mcp/`) with three tools, `create_pick_link`, `read_pick_link` and `create_confirmation_link`. `mcp/pick.js` mirrors the Swift wire format; `node --test mcp/test/pick.test.js` and the Swift `PickLinkTests` check both directions.
 
 ## Simulator screenshots and recordings
 

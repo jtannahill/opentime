@@ -121,6 +121,14 @@
     return day === today ? "Today" : day === today + 86400000 ? "Tomorrow" : dayFmt.format(t);
   }
   function stamp(t) { return new Date(t).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""); }
+  // A lulls.app/confirmed link for the other person: one tap adds the meeting to their calendar.
+  function confirmURL(t) {
+    var wire = { v: 1, t: Math.round(t / 60000), d: reply.minutes, z: here };
+    if (reply.forName) wire.n = reply.forName;
+    if (reply.name) wire.f = reply.name;
+    var b = btoa(String.fromCharCode.apply(null, new TextEncoder().encode(JSON.stringify(wire))));
+    return location.origin + "/confirmed#" + b.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
   function zoneAbbr(t) {
     var part = new Intl.DateTimeFormat(undefined, { timeZoneName: "short" }).formatToParts(t)
       .filter(function (p) { return p.type === "timeZoneName"; })[0];
@@ -137,7 +145,7 @@
     if (!passed) {
       var row = document.createElement("div"); row.className = "actions";
       var ok = document.createElement("button"); ok.type = "button"; ok.className = "primary"; ok.textContent = "Confirm this time";
-      var text = dayName(t) + ", " + dateFmt.format(t) + " at " + timeFmt.format(t) + " – " + timeFmt.format(t + len) + zoneAbbr(t) + " it is. See you then.";
+      var text = dayName(t) + ", " + dateFmt.format(t) + " at " + timeFmt.format(t) + " – " + timeFmt.format(t + len) + zoneAbbr(t) + " it is. See you then. Add it to your calendar: " + confirmURL(t);
       ok.addEventListener("click", function () {
         if (navigator.share) { navigator.share({ text: text }).catch(function () {}); return; }
         (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () {

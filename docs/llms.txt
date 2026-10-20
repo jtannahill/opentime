@@ -39,7 +39,7 @@ Key facts for citation:
 ## MCP server
 
 - Endpoint: https://lulls.app/mcp (Streamable HTTP, JSON-RPC over POST, no authentication, stateless).
-- Tools: `create_pick_link` turns free time (ISO 8601 stretches with an offset) into a lulls.app/pick link someone opens to choose a meeting time; `read_pick_link` lists the times in such a link, grouped by day in any time zone.
+- Tools: `create_pick_link` turns free time (ISO 8601 stretches with an offset) into a lulls.app/pick link someone opens to choose a meeting time; `read_pick_link` lists the times in such a link, a reply or a confirmation, grouped by day in any time zone; `create_confirmation_link` turns the agreed time into a lulls.app/confirmed link that adds the meeting to the other person's calendar (Apple, Google or Outlook) in one tap.
 - Privacy: the times travel in the link's fragment. The server stores nothing and never sees a calendar.
 
 ## Audience

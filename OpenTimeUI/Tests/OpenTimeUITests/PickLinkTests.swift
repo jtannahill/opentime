@@ -108,3 +108,27 @@ import Testing
         #expect(reply?.name == "Ana")
     }
 }
+
+@Test func confirmLinkRoundTrips() {
+    let reply = PickReply(name: "Maya", forName: "Jamie", timeZoneID: "America/Chicago", meetingMinutes: 30,
+                          picks: [Date(timeIntervalSince1970: 29885190 * 60)])
+    let link = ConfirmLink(reply: reply, start: reply.picks[0], timeZone: TimeZone(identifier: "America/New_York")!)
+    #expect(link.url.host == "lulls.app")
+    #expect(link.url.path == "/confirmed")
+    #expect(link.url.query == nil)
+    let back = ConfirmLink(url: link.url)
+    #expect(back == link)
+    #expect(back?.name == "Jamie")
+    #expect(back?.forName == "Maya")
+    #expect(back?.meetingMinutes == 30)
+}
+
+@Test func confirmLinkReadsTheWebWireFormat() {
+    // The JSON reply.html and the MCP server write: {v,t,d,z,n,f}.
+    let wire = #"{"v":1,"t":29885190,"d":30,"z":"America/New_York","n":"Jamie","f":"Maya"}"#
+    let url = URL(string: "https://lulls.app/confirmed#" + PickLink.base64url(Data(wire.utf8)))!
+    let link = ConfirmLink(url: url)
+    #expect(link?.start == Date(timeIntervalSince1970: 29885190 * 60))
+    #expect(link?.timeZoneID == "America/New_York")
+    #expect(ConfirmLink(url: URL(string: "https://lulls.app/confirmed")!) == nil)
+}

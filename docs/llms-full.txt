@@ -93,7 +93,7 @@ OpenTime can send a pick-a-time link (https://lulls.app/pick#...). The recipient
 
 ### Is there an MCP server?
 
-Yes: https://lulls.app/mcp, a public, stateless MCP server (Streamable HTTP). Tools: create_pick_link (free time in, pick-a-time link out) and read_pick_link (a pick-a-time link or a reply link in, its times listed by day in any time zone out). It stores nothing and has no calendar access.
+Yes: https://lulls.app/mcp, a public, stateless MCP server (Streamable HTTP). Tools: create_pick_link (free time in, pick-a-time link out) read_pick_link (a pick-a-time link, a reply or a confirmation in, its times listed by day in any time zone out) and create_confirmation_link (the agreed time in, a lulls.app/confirmed link out that adds the meeting to the other person's calendar in one tap). It stores nothing and has no calendar access.
 
 ### Does the developer see my calendar?
 No. There are no servers and no developer-side data collection of any kind.

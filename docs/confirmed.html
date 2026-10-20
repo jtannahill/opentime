@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<title>Confirmed · Open Time</title>
+<meta name="description" content="A meeting time agreed with Open Time. Add it to your calendar; the time is in the link itself and nothing is sent to a server.">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="It's confirmed">
+<meta property="og:description" content="Add the meeting to your calendar in one tap.">
+<meta property="og:image" content="https://lulls.app/og-image.png">
+<meta property="og:site_name" content="Open Time">
+<style>
+  :root {
+    --bg: #0a0b0d; --surface: #111317; --border: #1d2026;
+    --text: #e8eaec; --text-dim: #a6abb2; --accent: #4ade80;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.5;
+    padding: max(24px, env(safe-area-inset-top)) 20px calc(40px + env(safe-area-inset-bottom));
+  }
+  main { max-width: 640px; margin: 0 auto; }
+  h1 { font: 700 clamp(2rem, 7vw, 2.75rem)/1.05 -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; letter-spacing: -0.02em; margin: 8px 0 28px; text-wrap: balance; }
+  .when { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 22px 0 24px; }
+  .day { font: 700 1.75rem/1.15 -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; letter-spacing: -0.015em; }
+  .range { font-size: 1.25rem; font-weight: 600; font-variant-numeric: tabular-nums; margin-top: 4px; }
+  .with { margin-top: 10px; }
+  .note { color: var(--text-dim); font-size: 0.9375rem; margin-top: 4px; }
+  .actions { display: grid; gap: 10px; margin-top: 24px; }
+  @media (min-width: 560px) { .actions { grid-template-columns: 1.3fr 1fr 1fr; } }
+  .actions a {
+    min-height: 48px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px;
+    font: 600 0.9375rem/1 -apple-system, BlinkMacSystemFont, sans-serif; border-radius: 10px; text-decoration: none;
+    transition: transform 100ms ease-out; -webkit-tap-highlight-color: transparent;
+  }
+  .actions a:active { transform: scale(0.97); }
+  .primary { background: var(--accent); color: var(--bg); }
+  .secondary { color: var(--text); border: 1px solid var(--border); }
+  @media (hover: hover) and (pointer: fine) { .secondary:hover { border-color: var(--text-dim); } }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .empty h2 { font: 700 1.25rem/1.2 -apple-system, BlinkMacSystemFont, sans-serif; margin-bottom: 6px; }
+  footer { margin-top: 32px; color: var(--text-dim); font-size: 0.875rem; }
+  footer a { color: var(--text); }
+  @media (prefers-reduced-motion: reduce) { .actions a { transition: none; } .actions a:active { transform: none; } }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Confirmed</h1>
+  <div id="body"></div>
+  <footer>
+    <p>The time is inside this link and never reaches a server. Google Calendar and Outlook see it only if you tap their button. Made with <a href="/">Open Time</a> for iPhone.</p>
+  </footer>
+</main>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  function clean(name) {
+    if (typeof name !== "string") return null;
+    name = name.trim();
+    return name ? name.slice(0, 40) : null;
+  }
+  function decode(fragment) {
+    try {
+      var b = fragment.replace(/-/g, "+").replace(/_/g, "/");
+      while (b.length % 4) b += "=";
+      var bytes = Uint8Array.from(atob(b), function (c) { return c.charCodeAt(0); });
+      var w = JSON.parse(new TextDecoder().decode(bytes));
+      if (w.v !== 1 || typeof w.t !== "number" || !isFinite(w.t) || !(w.d >= 5 && w.d <= 480)) return null;
+      return { start: w.t * 60000, minutes: w.d, name: clean(w.n), forName: clean(w.f), zone: w.z };
+    } catch (e) { return null; }
+  }
+  var c = decode(location.hash.slice(1)), body = $("body");
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
+  if (!c) {
+    var d = el("div", "empty"); d.append(el("h2", null, "This link has no time in it"), el("p", "note", "It may have been cut short when it was copied. Ask them to send it again."));
+    body.append(d);
+    return;
+  }
+  var end = c.start + c.minutes * 60000;
+  var here = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  var dayFmt = new Intl.DateTimeFormat(undefined, { weekday: "long", month: "long", day: "numeric" });
+  var timeFmt = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" });
+  function zoneName(zone) {
+    try {
+      var part = new Intl.DateTimeFormat(undefined, { timeZone: zone, timeZoneName: "longGeneric" })
+        .formatToParts(new Date()).filter(function (p) { return p.type === "timeZoneName"; })[0];
+      return part ? part.value : zone.replace(/_/g, " ");
+    } catch (e) { return String(zone).replace(/_/g, " "); }
+  }
+  $("title").textContent = c.name ? c.name + " confirmed a time" : "Confirmed";
+  var when = el("div", "when");
+  when.append(el("p", "day", dayFmt.format(c.start)), el("p", "range", timeFmt.format(c.start) + " – " + timeFmt.format(end)));
+  when.append(el("p", "with", c.minutes + " minutes" + (c.name ? " with " + c.name : "") + "."));
+  when.append(el("p", "note", "In your time zone (" + zoneName(here) + ")." +
+    (c.zone && zoneName(c.zone) !== zoneName(here) ? " " + (c.name || "They") + " is in " + zoneName(c.zone) + "." : "")));
+  body.append(when);
+  if (end < Date.now()) { body.append(el("p", "note", "This meeting has already happened.")); return; }
+
+  var title = c.name ? "Meeting with " + c.name : "Meeting";
+  function stamp(t) { return new Date(t).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""); }
+  var ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Open Time//Confirmed//EN", "BEGIN:VEVENT",
+    "UID:" + c.start + "-" + Math.random().toString(36).slice(2) + "@lulls.app", "DTSTAMP:" + stamp(Date.now()),
+    "DTSTART:" + stamp(c.start), "DTEND:" + stamp(end),
+    "SUMMARY:" + title.replace(/([,;\\])/g, "\\$1"), "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
+  var row = el("div", "actions");
+  var apple = el("a", "primary", "Add to Calendar");
+  apple.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+  apple.download = "Open Time meeting.ics";
+  var g = el("a", "secondary", "Google Calendar");
+  g.href = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(title) +
+    "&dates=" + stamp(c.start) + "/" + stamp(end);
+  var o = el("a", "secondary", "Outlook");
+  o.href = "https://outlook.live.com/calendar/0/deeplink/compose?subject=" + encodeURIComponent(title) +
+    "&startdt=" + encodeURIComponent(new Date(c.start).toISOString()) + "&enddt=" + encodeURIComponent(new Date(end).toISOString());
+  [g, o].forEach(function (a) { a.target = "_blank"; a.rel = "noopener noreferrer"; });
+  row.append(apple, g, o);
+  body.append(row);
+})();
+</script>
+</body>
+</html>

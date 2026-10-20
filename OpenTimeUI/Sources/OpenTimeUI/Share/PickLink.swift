@@ -193,6 +193,66 @@ public struct PickReply: Equatable, Sendable {
     }
 }
 
+/// One agreed meeting time, sent back once a time is confirmed. The other
+/// person opens it to add the meeting to their calendar in one tap. Like the
+/// link and the reply, the time travels in the fragment.
+///
+/// https://lulls.app/confirmed#<base64url JSON>
+public struct ConfirmLink: Equatable, Sendable {
+    public static let path = "/confirmed"
+
+    public let start: Date
+    public let meetingMinutes: Int
+    /// Optional name of the person confirming.
+    public let name: String?
+    /// Optional name of the person it is for.
+    public let forName: String?
+    public let timeZoneID: String
+
+    public init(start: Date, meetingMinutes: Int, name: String?, forName: String?, timeZone: TimeZone = .current) {
+        self.start = Date(timeIntervalSince1970: TimeInterval(Int((start.timeIntervalSince1970 / 60).rounded()) * 60))
+        self.meetingMinutes = meetingMinutes
+        self.name = PickLink.clean(name)
+        self.forName = PickLink.clean(forName)
+        self.timeZoneID = timeZone.identifier
+    }
+
+    /// The confirmation for one of the times in a reply, from the person who shared the link.
+    public init(reply: PickReply, start: Date, timeZone: TimeZone = .current) {
+        self.init(start: start, meetingMinutes: reply.meetingMinutes, name: reply.forName, forName: reply.name, timeZone: timeZone)
+    }
+
+    private struct Wire: Codable {
+        var v: Int
+        var t: Int
+        var d: Int
+        var z: String
+        var n: String?
+        var f: String?
+    }
+
+    public var url: URL {
+        let wire = Wire(v: 1, t: Int(start.timeIntervalSince1970 / 60), d: meetingMinutes, z: timeZoneID, n: name, f: forName)
+        let data = (try? JSONEncoder().encode(wire)) ?? Data()
+        var c = URLComponents()
+        c.scheme = "https"
+        c.host = PickLink.host
+        c.path = Self.path
+        c.fragment = PickLink.base64url(data)
+        return c.url!
+    }
+
+    public init?(url: URL) {
+        guard url.host == PickLink.host || url.host == "www.\(PickLink.host)",
+              url.path == Self.path || url.path == Self.path + "/",
+              let fragment = url.fragment, let data = PickLink.data(base64url: fragment),
+              let wire = try? JSONDecoder().decode(Wire.self, from: data), wire.v == 1,
+              (5...480).contains(wire.d) else { return nil }
+        self.init(start: Date(timeIntervalSince1970: TimeInterval(wire.t * 60)), meetingMinutes: wire.d,
+                  name: wire.n, forName: wire.f, timeZone: TimeZone(identifier: wire.z) ?? TimeZone(identifier: "UTC")!)
+    }
+}
+
 /// A calendar file for one chosen time, for "Add to Calendar".
 public enum ICSFile {
     public static func event(title: String, start: Date, end: Date, now: Date = Date()) -> String {

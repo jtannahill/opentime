@@ -5,6 +5,10 @@ import SwiftUI
 /// way to confirm it and put it on the calendar.
 public struct PickReplyView: View {
     public let reply: PickReply?
+    /// The time whose new-event sheet is open.
+    @State private var inviting: Invite?
+    /// Times added to the calendar here, so their row can say so.
+    @State private var added: Set<Date> = []
 
     public init(reply: PickReply?) {
         self.reply = reply
@@ -38,6 +42,22 @@ public struct PickReplyView: View {
             .padding(.bottom, 24)
         }
         .background(Theme.bg)
+        #if canImport(EventKitUI)
+        .sheet(item: $inviting) { invite in
+            EventEditSheet(title: invite.title, start: invite.start, end: invite.end) { saved in
+                if saved { added.insert(invite.start) }
+                inviting = nil
+            }
+            .ignoresSafeArea()
+        }
+        #endif
+    }
+
+    private struct Invite: Identifiable {
+        let title: String
+        let start: Date
+        let end: Date
+        var id: Date { start }
     }
 
     private func intro(_ reply: PickReply) -> some View {
@@ -72,15 +92,31 @@ public struct PickReplyView: View {
                 .tnum()
                 .foregroundStyle(passed ? Theme.muted : Theme.fg)
             if !passed {
+                let title = reply.name.map { "Meeting with \($0)" } ?? "Meeting"
+                let confirm = ConfirmLink(reply: reply, start: start)
+                let isAdded = added.contains(start)
+                if isAdded {
+                    Text("On your calendar. Send \(reply.name ?? "them") the confirmation so it goes on theirs too.")
+                        .font(Theme.Font.display(size: 13, relativeTo: .footnote))
+                        .foregroundStyle(Theme.muted)
+                }
                 HStack(spacing: 10) {
-                    ShareLink(item: Self.confirmation(start: start, end: end)) {
-                        actionLabel("Confirm this time", filled: true)
-                    }
-                    if let ics = PickTimeView.icsFile(title: reply.name.map { "Meeting with \($0)" } ?? "Meeting",
-                                                      start: start, end: end) {
-                        ShareLink(item: ics) {
-                            actionLabel("Add to Calendar", filled: false)
+                    #if canImport(EventKitUI)
+                    if !isAdded {
+                        Button {
+                            inviting = Invite(title: title, start: start, end: end)
+                        } label: {
+                            actionLabel("Confirm and invite", filled: true)
                         }
+                        .buttonStyle(.plain)
+                    }
+                    #else
+                    if let ics = PickTimeView.icsFile(title: title, start: start, end: end) {
+                        ShareLink(item: ics) { actionLabel("Add to Calendar", filled: true) }
+                    }
+                    #endif
+                    ShareLink(item: Self.confirmation(start: start, end: end, link: confirm.url)) {
+                        actionLabel("Send confirmation", filled: isAdded)
                     }
                 }
             }
@@ -119,9 +155,10 @@ public struct PickReplyView: View {
         return "Times are in your time zone (\(local)). They are in \(theirName)."
     }
 
-    static func confirmation(start: Date, end: Date, here: TimeZone = .current) -> String {
+    static func confirmation(start: Date, end: Date, link: URL? = nil, here: TimeZone = .current) -> String {
         let zone = here.abbreviation(for: start) ?? ""
-        return "\(PickTimeView.dayName(start)), \(PickTimeView.dateLabel(start)) at \(TimeFormat.timeRange(from: start, to: end)) \(zone) it is. See you then."
+        let text = "\(PickTimeView.dayName(start)), \(PickTimeView.dateLabel(start)) at \(TimeFormat.timeRange(from: start, to: end)) \(zone) it is. See you then."
             .replacingOccurrences(of: "  ", with: " ")
+        return link.map { text + " Add it to your calendar: \($0.absoluteString)" } ?? text
     }
 }
