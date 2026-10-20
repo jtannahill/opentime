@@ -6,6 +6,6 @@ build/
 .DS_Store
 mock/
 
-# Licensed fonts, not redistributable
+# Licensed fonts, not redistributable (tracked here, excluded from the public repo)
 OpenTimeUI/Sources/OpenTimeUI/Resources/*.ttf
 OpenTimeUI/Sources/OpenTimeUI/Resources/*.otf

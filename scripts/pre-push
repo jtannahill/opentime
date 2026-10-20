@@ -1,0 +1,9 @@
+#!/bin/sh
+# Install: ln -sf ../../scripts/pre-push .git/hooks/pre-push
+# When main is pushed, mirror it to the public repo. A failed sync warns but never blocks the push.
+while read -r local_ref local_sha remote_ref remote_sha; do
+  if [ "$remote_ref" = "refs/heads/main" ] && [ "$local_sha" != "0000000000000000000000000000000000000000" ]; then
+    scripts/sync-public.sh "$local_sha" || echo "pre-push: public sync failed; run scripts/sync-public.sh by hand" >&2
+  fi
+done
+exit 0

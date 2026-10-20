@@ -86,3 +86,11 @@ Debug builds take launch arguments so the App Store screenshots and the lulls.ap
 - `-pickLink <url>` opens a link in the App Clip
 
 With no Simulator window, a UI test can drive the installed app through `XCUIApplication(bundleIdentifier:)` with these arguments while `xcrun simctl io <device> recordVideo` records the screen.
+
+## Public repository
+
+OpenTime is developed in a private repository and published, without the font files, at [github.com/jtannahill/opentime](https://github.com/jtannahill/opentime). `scripts/sync-public.sh` copies a commit across and refuses to publish if a font file is present or gitleaks finds a secret; `scripts/pre-push` runs it on every push to `main` (install once per clone with `ln -sf ../../scripts/pre-push .git/hooks/pre-push`).
+
+## License
+
+The code is under the [MIT License](LICENSE). The Neue Haas Grotesk Display font is not included and not covered by it, and neither are the OpenTime name and app icon.
