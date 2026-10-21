@@ -75,6 +75,8 @@
   .primary { background: var(--accent); color: var(--bg); border: 0; }
   .actions button, .actions a { transition: transform 100ms ease-out; -webkit-tap-highlight-color: transparent; }
   .actions button:active, .actions a:active, .demo:active { transform: scale(0.97); }
+  .other { display: block; min-height: 44px; margin: 4px auto 0; padding: 0 12px; background: none; border: 0; color: var(--text-dim); font: 500 0.875rem/1 -apple-system, BlinkMacSystemFont, sans-serif; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .other[hidden] { display: none; }
   .secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
   .demo { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border-radius: 10px; text-decoration: none; font-weight: 600; margin-bottom: 10px; }
   footer { margin-top: 32px; color: var(--text-dim); font-size: 0.875rem; }
@@ -102,12 +104,26 @@
       <button class="primary" id="send" type="button">Send my times</button>
       <a class="secondary" id="ics" download="Open Time meeting.ics" href="#">Add to calendar</a>
     </div>
+    <button class="other" id="other" type="button" hidden>Send another way</button>
   </div>
 </div>
 <script>
 (function () {
   "use strict";
   var $ = function (id) { return document.getElementById(id); };
+  // Mirrors PickLink.ReplyTo: an email, or a phone number tidied to digits.
+  function replyTo(t) {
+    if (typeof t !== "string") return null;
+    t = t.trim();
+    if (!t || t.length > 80) return null;
+    if (t.indexOf("@") >= 0) {
+      var parts = t.split("@");
+      return parts.length === 2 && parts[0] && parts[1].indexOf(".") > 0 && !/\s/.test(t) ? { kind: "email", to: t } : null;
+    }
+    var digits = t.replace(/\D/g, "");
+    if (digits.length < 5 || digits.length > 15 || !/^[\d+\-(). ]+$/.test(t)) return null;
+    return { kind: "phone", to: (t.charAt(0) === "+" ? "+" : "") + digits };
+  }
   function decode(fragment) {
     try {
       var b = fragment.replace(/-/g, "+").replace(/_/g, "/");
@@ -118,7 +134,7 @@
       var slots = w.s.slice(0, 80).filter(function (p) {
         return Array.isArray(p) && p.length === 2 && p[1] >= w.d && p[1] <= 1440;
       }).map(function (p) { return { start: p[0] * 60000, minutes: p[1] }; });
-      return { name: typeof w.n === "string" ? w.n.slice(0, 40) : null, zone: w.z, minutes: w.d, slots: slots };
+      return { name: typeof w.n === "string" ? w.n.slice(0, 40) : null, replyTo: replyTo(w.r), zone: w.z, minutes: w.d, slots: slots };
     } catch (e) { return null; }
   }
   var MAX = 5;
@@ -244,8 +260,18 @@
     }
     document.body.style.paddingBottom = $("bar").offsetHeight + 24 + "px";
   }
-  $("send").addEventListener("click", function () {
-    var url = replyURL(), text = selected.length === 1 ? "This time works for me:" : "These times work for me:";
+  function message() { return selected.length === 1 ? "This time works for me:" : "These times work for me:"; }
+  function directURL() {
+    var r = link.replyTo; if (!r) return null;
+    var body = encodeURIComponent(message() + "\n" + replyURL());
+    return r.kind === "phone" ? "sms:" + r.to + "?&body=" + body
+      : "mailto:" + r.to + "?subject=" + encodeURIComponent("Times that work for me") + "&body=" + body;
+  }
+  var sendLabel = link.replyTo ? "Send in " + (link.replyTo.kind === "phone" ? "Messages" : "Mail") : "Send my times";
+  $("send").textContent = sendLabel;
+  $("other").hidden = !link.replyTo;
+  function shareAnyWay() {
+    var url = replyURL(), text = message();
     if (navigator.share) {
       navigator.share({ text: text, url: url }).catch(function () {});
       return;
@@ -253,9 +279,16 @@
     var all = text + "\n" + selected.map(when).join("\n") + "\n" + url;
     (navigator.clipboard ? navigator.clipboard.writeText(all) : Promise.reject()).then(function () {
       $("send").textContent = "Copied. Paste it to " + (link.name || "them");
-      setTimeout(function () { $("send").textContent = "Send my times"; }, 2400);
+      setTimeout(function () { $("send").textContent = sendLabel; }, 2400);
     }, function () { window.prompt("Copy this reply:", all); });
+  }
+  $("send").addEventListener("click", function () {
+    var direct = directURL();
+    // Already addressed to the sender, so only Send is left to tap.
+    if (direct) { location.href = direct; return; }
+    shareAnyWay();
   });
+  $("other").addEventListener("click", shareAnyWay);
 })();
 </script>
 </body>

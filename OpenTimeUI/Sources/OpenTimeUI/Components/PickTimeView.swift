@@ -151,9 +151,20 @@ public struct PickTimeView: View {
                 .padding(.horizontal, 12)
                 .frame(minHeight: 44)
                 .overlay(Rectangle().stroke(Theme.rule, lineWidth: 1))
+            let direct = link.replyTo.flatMap { to in
+                to.url(message: Self.replyMessage(picks.count), link: reply.url).map { (to, $0) }
+            }
             HStack(spacing: 10) {
-                ShareLink(item: reply.url, message: Text(Self.replyMessage(picks.count))) {
-                    actionLabel("Send my times", filled: true)
+                if let (to, url) = direct {
+                    // Already addressed to the sender, so only Send is left to tap.
+                    Link(destination: url) {
+                        actionLabel("Send in \(to.appName)", filled: true)
+                    }
+                    .accessibilityHint("Opens \(to.appName) with your times, addressed to \(link.name ?? "them")")
+                } else {
+                    ShareLink(item: reply.url, message: Text(Self.replyMessage(picks.count))) {
+                        actionLabel("Send my times", filled: true)
+                    }
                 }
                 if picks.count == 1, let start = picks.first,
                    let ics = Self.icsFile(title: link.name.map { "Meeting with \($0)" } ?? "Meeting",
@@ -162,6 +173,16 @@ public struct PickTimeView: View {
                     ShareLink(item: ics) {
                         actionLabel("Add to Calendar", filled: false)
                     }
+                }
+            }
+            if direct != nil {
+                ShareLink(item: reply.url, message: Text(Self.replyMessage(picks.count))) {
+                    Text("Send another way")
+                        .font(Theme.Font.display(size: 13, weight: .medium, relativeTo: .footnote))
+                        .underline()
+                        .foregroundStyle(Theme.muted)
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
                 }
             }
         }

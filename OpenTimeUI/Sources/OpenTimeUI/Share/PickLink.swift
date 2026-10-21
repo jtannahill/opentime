@@ -20,6 +20,64 @@ public struct PickLink: Equatable, Sendable {
         public var end: Date { start.addingTimeInterval(TimeInterval(minutes * 60)) }
     }
 
+    /// Where the reply should go, if the sender chose to say: a phone
+    /// number or an email address. The pick page then opens Messages or Mail
+    /// already addressed, so the reply needs one tap to send.
+    public enum ReplyTo: Equatable, Sendable, Hashable {
+        case phone(String)
+        case email(String)
+
+        /// Reads what someone typed: digits with the usual punctuation, or an
+        /// address with an @ in it. Anything else is nil.
+        public init?(_ text: String?) {
+            guard let trimmed = text?.trimmingCharacters(in: .whitespacesAndNewlines), !trimmed.isEmpty,
+                  trimmed.count <= 80 else { return nil }
+            if trimmed.contains("@") {
+                let parts = trimmed.split(separator: "@", omittingEmptySubsequences: false)
+                guard parts.count == 2, !parts[0].isEmpty, parts[1].contains("."),
+                      trimmed.rangeOfCharacter(from: .whitespacesAndNewlines) == nil else { return nil }
+                self = .email(trimmed)
+                return
+            }
+            let digits = trimmed.filter { $0.isNumber }
+            guard digits.count >= 5, digits.count <= 15,
+                  trimmed.allSatisfy({ $0.isNumber || "+-() .".contains($0) }) else { return nil }
+            self = .phone((trimmed.hasPrefix("+") ? "+" : "") + digits)
+        }
+
+        /// The number or address as it goes in the link.
+        public var text: String {
+            switch self {
+            case .phone(let n): return n
+            case .email(let e): return e
+            }
+        }
+
+        /// The app that opens: shown on the button so they know what to expect.
+        public var appName: String {
+            switch self {
+            case .phone: return "Messages"
+            case .email: return "Mail"
+            }
+        }
+
+        /// A URL that opens Messages or Mail addressed to the sender with the
+        /// message and the reply link in the body, leaving only Send to tap.
+        public func url(message: String, link: URL) -> URL? {
+            var allowed = CharacterSet.alphanumerics
+            allowed.insert(charactersIn: "-._~")
+            let body = (message + "\n" + link.absoluteString).addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
+            switch self {
+            case .phone(let n):
+                // "?&body=" is the form both iOS and Android accept.
+                return URL(string: "sms:\(n)?&body=\(body)")
+            case .email(let e):
+                let subject = "Times that work for me".addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
+                return URL(string: "mailto:\(e)?subject=\(subject)&body=\(body)")
+            }
+        }
+    }
+
     /// Optional first name the sender chose to show.
     public let name: String?
     /// The sender's time zone, shown as a hint; times are absolute.
@@ -27,23 +85,27 @@ public struct PickLink: Equatable, Sendable {
     /// How long the meeting is; every slot is at least this long.
     public let meetingMinutes: Int
     public let slots: [Slot]
+    /// Optional phone number or email the reply should go to.
+    public let replyTo: ReplyTo?
 
-    public init(name: String?, timeZoneID: String, meetingMinutes: Int, slots: [Slot]) {
+    public init(name: String?, timeZoneID: String, meetingMinutes: Int, slots: [Slot], replyTo: ReplyTo? = nil) {
         self.name = Self.clean(name)
         self.timeZoneID = timeZoneID
         self.meetingMinutes = meetingMinutes
         self.slots = Array(slots.sorted { $0.start < $1.start }.prefix(Self.maxSlots))
+        self.replyTo = replyTo
     }
 
     /// The free stretches of a set of days, cut to whole meetings. A slot
     /// shorter than the meeting is left out.
     public static func from(days: [DayAvailability], meetingMinutes: Int, name: String?,
-                            timeZone: TimeZone = .current) -> PickLink {
+                            replyTo: ReplyTo? = nil, timeZone: TimeZone = .current) -> PickLink {
         let slots = days.flatMap(\.freeSlots).compactMap { free -> Slot? in
             let minutes = Int(free.end.timeIntervalSince(free.start) / 60)
             return minutes >= meetingMinutes ? Slot(start: free.start, minutes: minutes) : nil
         }
-        return PickLink(name: name, timeZoneID: timeZone.identifier, meetingMinutes: meetingMinutes, slots: slots)
+        return PickLink(name: name, timeZoneID: timeZone.identifier, meetingMinutes: meetingMinutes,
+                        slots: slots, replyTo: replyTo)
     }
 
     // MARK: - Wire format
@@ -55,11 +117,14 @@ public struct PickLink: Equatable, Sendable {
         var d: Int
         /// [start in minutes since 1970, length in minutes] pairs.
         var s: [[Int]]
+        /// Reply-to phone number or email, if given.
+        var r: String?
     }
 
     public var url: URL {
         let wire = Wire(v: 1, n: name, z: timeZoneID, d: meetingMinutes,
-                        s: slots.map { [Int($0.start.timeIntervalSince1970 / 60), $0.minutes] })
+                        s: slots.map { [Int($0.start.timeIntervalSince1970 / 60), $0.minutes] },
+                        r: replyTo?.text)
         let data = (try? JSONEncoder().encode(wire)) ?? Data()
         var c = URLComponents()
         c.scheme = "https"
@@ -82,7 +147,7 @@ public struct PickLink: Equatable, Sendable {
             return Slot(start: Date(timeIntervalSince1970: TimeInterval(pair[0] * 60)), minutes: pair[1])
         }
         self.init(name: wire.n, timeZoneID: TimeZone(identifier: wire.z)?.identifier ?? "UTC",
-                  meetingMinutes: wire.d, slots: slots)
+                  meetingMinutes: wire.d, slots: slots, replyTo: ReplyTo(wire.r))
     }
 
     /// Meeting start times the recipient can still choose, every

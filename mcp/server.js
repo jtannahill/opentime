@@ -6,7 +6,7 @@ import { createLink, readLink, readReply, createConfirmation, readConfirmation, 
 
 export const PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"];
 
-const SERVER_INFO = { name: "open-time-pick", title: "Open Time pick-a-time links", version: "1.3.0" };
+const SERVER_INFO = { name: "open-time-pick", title: "Open Time pick-a-time links", version: "1.4.0" };
 
 const INSTRUCTIONS =
   "Open Time pick-a-time links let someone choose up to five meeting times from a set of free times and send them back as a lulls.app/reply link. " +
@@ -47,6 +47,7 @@ export const TOOLS = [
         meeting_minutes: { type: "integer", minimum: 5, maximum: 480, default: 30, description: "How long the meeting is." },
         name: { type: "string", maxLength: 40, description: "Optional first name shown as \"<name> shared these free times.\"" },
         time_zone: { type: "string", description: "IANA time zone of the person sharing, e.g. America/New_York. Shown to the recipient as a hint." },
+        reply_to: { type: "string", maxLength: 80, description: "Optional phone number or email of the person sharing. The recipient's Send button then opens Messages or Mail already addressed to it. It is visible to anyone who has the link, so include it only if the user asks." },
       },
       required: ["free_times"],
     },
@@ -148,15 +149,17 @@ export function callTool(name, args = {}, now = Date.now()) {
         meetingMinutes: args.meeting_minutes ?? 30,
         name: args.name ?? null,
         timeZone: args.time_zone ?? "UTC",
+        replyTo: args.reply_to ?? null,
       });
       const notes = [];
+      if (r.replyTo) notes.push(`Their Send button opens ${r.replyTo.includes("@") ? "Mail" : "Messages"} addressed to ${r.replyTo}.`);
       if (r.skipped.length) notes.push("Left out: " + r.skipped.join("; ") + ".");
       if (r.dropped) notes.push(`Only the first 80 stretches fit; ${r.dropped} left out.`);
       return text(
         `Pick-a-time link (${r.slots} free stretch${r.slots === 1 ? "" : "es"}):\n${r.url}\n\n` +
           "Send it as is; everything after # is needed. The recipient picks up to five times in their own time zone and can send them back as a lulls.app/reply link." +
           (notes.length ? "\n\n" + notes.join(" ") : ""),
-        { url: r.url, free_stretches: r.slots, skipped: r.skipped },
+        { url: r.url, free_stretches: r.slots, skipped: r.skipped, reply_to: r.replyTo },
       );
     }
     if (name === "find_common_times") {
@@ -227,7 +230,7 @@ export function callTool(name, args = {}, now = Date.now()) {
         : "None of the times are still ahead; ask for a fresh link.";
       return text(
         `${who} ${r.meetingMinutes}-minute meeting times (shown in ${zone}; sender in ${r.senderTimeZone}):\n${body}`,
-        { name: r.name, meeting_minutes: r.meetingMinutes, sender_time_zone: r.senderTimeZone, choices: r.choices, free_times: r.freeTimes },
+        { name: r.name, reply_to: r.replyTo, meeting_minutes: r.meetingMinutes, sender_time_zone: r.senderTimeZone, choices: r.choices, free_times: r.freeTimes },
       );
     }
     return text(`Unknown tool: ${name}`, null, true);

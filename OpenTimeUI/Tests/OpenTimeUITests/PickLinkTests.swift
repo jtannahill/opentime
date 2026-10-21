@@ -132,3 +132,44 @@ import Testing
     #expect(link?.timeZoneID == "America/New_York")
     #expect(ConfirmLink(url: URL(string: "https://lulls.app/confirmed")!) == nil)
 }
+
+@Suite struct ReplyToTests {
+    let base = Date(timeIntervalSince1970: 1_792_400_400)
+
+    @Test func phoneAndEmailAreRecognisedAndTidied() {
+        #expect(PickLink.ReplyTo("(212) 555-0199") == .phone("2125550199"))
+        #expect(PickLink.ReplyTo(" +44 20 7946 0958 ") == .phone("+442079460958"))
+        #expect(PickLink.ReplyTo("Sam@Example.com ") == .email("Sam@Example.com"))
+        #expect(PickLink.ReplyTo("sam at example") == nil)
+        #expect(PickLink.ReplyTo("12") == nil, "too short to be a number")
+        #expect(PickLink.ReplyTo("") == nil)
+        #expect(PickLink.ReplyTo(nil) == nil)
+    }
+
+    @Test func rideInTheLinkAndComeBack() {
+        let link = PickLink(name: "Jamie", timeZoneID: "UTC", meetingMinutes: 30,
+                            slots: [.init(start: base, minutes: 60)], replyTo: .phone("+12125550199"))
+        let back = PickLink(url: link.url)
+        #expect(back?.replyTo == .phone("+12125550199"))
+        let plain = PickLink(name: nil, timeZoneID: "UTC", meetingMinutes: 30, slots: [.init(start: base, minutes: 60)])
+        #expect(PickLink(url: plain.url)?.replyTo == nil)
+        #expect(!plain.url.fragment!.contains("\"r\""), "no field at all when there is no reply-to")
+    }
+
+    @Test func junkReplyToInAWireIsDropped() {
+        let wire = #"{"v":1,"z":"UTC","d":30,"s":[[29873400,60]],"r":"not a number"}"#
+        let url = URL(string: "https://lulls.app/pick#" + PickLink.base64url(Data(wire.utf8)))!
+        #expect(PickLink(url: url)?.replyTo == nil)
+    }
+
+    @Test func opensMessagesOrMailWithTheReplyFilledIn() {
+        let reply = URL(string: "https://lulls.app/reply#abc")!
+        let sms = PickLink.ReplyTo.phone("+12125550199").url(message: "This time works for me:", link: reply)
+        #expect(sms?.scheme == "sms")
+        #expect(sms?.absoluteString == "sms:+12125550199?&body=This%20time%20works%20for%20me%3A%0Ahttps%3A%2F%2Flulls.app%2Freply%23abc")
+        let mail = PickLink.ReplyTo.email("sam@example.com").url(message: "Hi", link: reply)
+        #expect(mail?.absoluteString == "mailto:sam@example.com?subject=Times%20that%20work%20for%20me&body=Hi%0Ahttps%3A%2F%2Flulls.app%2Freply%23abc")
+        #expect(PickLink.ReplyTo.phone("+12125550199").appName == "Messages")
+        #expect(PickLink.ReplyTo.email("sam@example.com").appName == "Mail")
+    }
+}

@@ -185,6 +185,26 @@ class CalendarManager: ObservableObject {
         return f
     }()
 
+    /// Saves a confirmed meeting to the default calendar without a sheet,
+    /// using the full access the app already has. False if it could not be
+    /// saved, so the caller can fall back to the new-event sheet.
+    func saveMeeting(title: String, start: Date, end: Date) -> Bool {
+        guard EKEventStore.authorizationStatus(for: .event) == .fullAccess,
+              let calendar = store.defaultCalendarForNewEvents else { return false }
+        let event = EKEvent(eventStore: store)
+        event.title = title
+        event.startDate = start
+        event.endDate = end
+        event.calendar = calendar
+        do {
+            try store.save(event, span: .thisEvent, commit: true)
+            refresh()
+            return true
+        } catch {
+            return false
+        }
+    }
+
     func availabilityText(for days: [DayAvailability]) -> String {
         var lines = ["Here's my availability:"]
         for day in days {

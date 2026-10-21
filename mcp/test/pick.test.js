@@ -149,3 +149,22 @@ test("a full exchange through the tools: link, overlap, reply, read, confirm", a
   }, NOW);
   assert.deepEqual(fromStretches.structuredContent.common, ["2026-10-27T14:00:00.000Z"]);
 });
+
+test("a reply-to number or address rides in the link and reads back", () => {
+  const free = [{ start: "2026-10-20T13:00:00-04:00", end: "2026-10-20T15:00:00-04:00" }];
+  const phone = createLink({ freeTimes: free, replyTo: "(212) 555-0199" });
+  assert.equal(readLink(phone.url, NOW).replyTo, "2125550199", "tidied to digits, as the app does");
+  const mail = createLink({ freeTimes: free, replyTo: " Sam@example.com " });
+  assert.equal(readLink(mail.url, NOW).replyTo, "Sam@example.com");
+  const none = createLink({ freeTimes: free });
+  assert.equal(readLink(none.url, NOW).replyTo, null);
+  assert.ok(!Buffer.from(new URL(none.url).hash.slice(1), "base64url").toString().includes('"r"'), "no field when there is none");
+  assert.throws(() => createLink({ freeTimes: free, replyTo: "sam at example" }), /reply_to/);
+  // Junk in a hand-made link is dropped, not fatal.
+  const wire = { v: 1, z: "UTC", d: 30, s: [[29883450, 90]], r: "nope" };
+  assert.equal(readLink("https://lulls.app/pick#" + Buffer.from(JSON.stringify(wire)).toString("base64url"), NOW).replyTo, null);
+  // The tool takes it as reply_to and says what it does.
+  const r = handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "create_pick_link", arguments: { free_times: free, reply_to: "+1 212 555 0199" } } }, NOW);
+  assert.match(r.result.content[0].text, /Messages/);
+  assert.equal(readLink(r.result.structuredContent.url, NOW).replyTo, "+12125550199");
+});

@@ -8,7 +8,7 @@ The display face is Neue Haas Grotesk Display, a commercial typeface licensed se
 
 ## Pick-a-time links and replies
 
-A link (`https://lulls.app/pick#...`) carries free times in the URL fragment, encoded by `OpenTimeUI/Sources/OpenTimeUI/Share/PickLink.swift`. It opens the App Clip, the app when installed, or `docs/pick.html` in any browser.
+A link (`https://lulls.app/pick#...`) carries free times in the URL fragment, encoded by `OpenTimeUI/Sources/OpenTimeUI/Share/PickLink.swift`. It opens the App Clip, the app when installed, or `docs/pick.html` in any browser. An optional `r` field holds a phone number or email (`PickLink.ReplyTo`); when present, the pick screen's Send button opens Messages (`sms:`) or Mail (`mailto:`) already addressed, with the reply link in the body. `mcp/pick.js` takes it as `reply_to`.
 
 A reply (`https://lulls.app/reply#...`, `PickReply` in the same file) carries only the chosen times, the meeting length, an optional name and the picker's time zone. It opens in the app (`PickReplyView`) or `docs/reply.html`. Universal links for `/pick*` and `/reply*` and the App Clip association are in `docs/.well-known/apple-app-site-association`.
 
@@ -24,6 +24,7 @@ Debug builds take launch arguments so App Store screenshots and the README clips
 - `-openURL <url>` routes a `lulls.app/pick#...` or `lulls.app/reply#...` link as if it had been opened
 - `-pickSelect <n>` preselects `n` times on the pick screen
 - `-pickLink <url>` opens a link in the App Clip
+- `-showLinkSheet` opens the pick-a-time link sheet
 
 With no Simulator window, a UI test can drive the installed app through `XCUIApplication(bundleIdentifier:)` with these arguments while `xcrun simctl io <device> recordVideo` records the screen.
 

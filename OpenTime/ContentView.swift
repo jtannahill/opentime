@@ -35,6 +35,10 @@ struct ContentView: View {
     @State private var showWorkHours = false
     @State private var pickLinkToShare: PickLinkShare?
     @AppStorage("pickLinkName") private var pickLinkName = ""
+    @AppStorage("pickLinkReplyTo") private var pickLinkReplyTo = ""
+    /// Set once the link sheet has been seen, so SHARE can go straight to
+    /// the share sheet after that.
+    @AppStorage("pickLinkSheetSeen") private var pickLinkSheetSeen = false
     @State private var queryText: String = ""
     @State private var queryResult: [DayAvailability]?
     @State private var queryIntent: AvailabilityIntent?
@@ -122,16 +126,26 @@ struct ContentView: View {
                 ActivityShareSheet(text: item.text)
             }
             .sheet(item: $pickLinkToShare) { item in
-                PickLinkSheet(days: item.days, meetingMinutes: slotDurationMin, name: $pickLinkName)
+                PickLinkSheet(days: item.days, meetingMinutes: slotDurationMin,
+                              name: $pickLinkName, replyTo: $pickLinkReplyTo)
+                    .onAppear { pickLinkSheetSeen = true }
             }
             .sheet(item: $deepLink.incomingPick) { pick in
                 PickTimeView(link: pick.link)
                     .presentationDragIndicator(.visible)
             }
             .sheet(item: $deepLink.incomingReply) { item in
-                PickReplyView(reply: item.reply)
+                PickReplyView(reply: item.reply, save: manager.saveMeeting)
                     .presentationDragIndicator(.visible)
             }
+            #if DEBUG
+            // -showLinkSheet: open the pick-a-time link sheet, for simulator screenshots.
+            .task {
+                guard CommandLine.arguments.contains("-showLinkSheet") else { return }
+                try? await Task.sleep(for: .seconds(1.5))
+                pickLinkToShare = PickLinkShare(days: filteredDays)
+            }
+            #endif
         }
         .preferredColorScheme(appearance.colorScheme)
         .task {
@@ -523,6 +537,22 @@ struct ContentView: View {
 
     // MARK: - Toolbar
 
+    /// The first time, the link sheet explains the link and asks for a name;
+    /// after that SHARE goes straight to the share sheet with the link.
+    private func sharePickLink() {
+        guard pickLinkSheetSeen else {
+            pickLinkToShare = PickLinkShare(days: filteredDays)
+            return
+        }
+        let link = PickLink.from(days: filteredDays, meetingMinutes: slotDurationMin, name: pickLinkName,
+                                 replyTo: PickLink.ReplyTo(pickLinkReplyTo))
+        guard !link.slots.isEmpty else {
+            pickLinkToShare = PickLinkShare(days: filteredDays)
+            return
+        }
+        SharePresenter.present([PickLinkSheet.message, link.url])
+    }
+
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
@@ -544,11 +574,12 @@ struct ContentView: View {
 
         ToolbarItem(placement: .topBarTrailing) {
             if manager.accessGranted && !filteredDays.isEmpty {
+                // Tap shares the link at once; press and hold for the rest.
                 Menu {
                     Button {
                         pickLinkToShare = PickLinkShare(days: filteredDays)
                     } label: {
-                        Label("Pick-a-Time Link", systemImage: "link")
+                        Label("Link Settings", systemImage: "slider.horizontal.3")
                     }
                     ShareLink(item: manager.availabilityText(for: filteredDays)) {
                         Label("Send as Text", systemImage: "text.alignleft")
@@ -558,7 +589,10 @@ struct ContentView: View {
                         .font(Theme.Font.display(size: 10, weight: .bold))
                         .kerning(1.8)
                         .foregroundStyle(Theme.fg)
+                } primaryAction: {
+                    sharePickLink()
                 }
+                .accessibilityHint("Shares a pick-a-time link. Press and hold for link settings or to send as text.")
             }
         }
 
@@ -671,13 +705,29 @@ struct PickLinkShare: Identifiable {
 /// Builds a pick-a-time link from the days on screen. The optional name is
 /// remembered so the next link needs no typing.
 struct PickLinkSheet: View {
+    static let message = "Pick the times that work for you:"
+
     let days: [DayAvailability]
     let meetingMinutes: Int
     @Binding var name: String
+    @Binding var replyTo: String
     @Environment(\.dismiss) private var dismiss
 
+    private var parsedReplyTo: PickLink.ReplyTo? { PickLink.ReplyTo(replyTo) }
+
     private var link: PickLink {
-        PickLink.from(days: days, meetingMinutes: meetingMinutes, name: name)
+        PickLink.from(days: days, meetingMinutes: meetingMinutes, name: name, replyTo: parsedReplyTo)
+    }
+
+    private var replyToFooter: String {
+        let typed = !replyTo.trimmingCharacters(in: .whitespaces).isEmpty
+        if typed && parsedReplyTo == nil {
+            return "That doesn\u{2019}t look like a phone number or email, so it is left out of the link."
+        }
+        if let to = parsedReplyTo {
+            return "Their Send button opens \(to.appName) addressed to you. Anyone with the link can see it."
+        }
+        return "Add your number or email and their Send button opens Messages or Mail addressed to you. Anyone with the link can see it."
     }
 
     var body: some View {
@@ -693,10 +743,20 @@ struct PickLinkSheet: View {
                          : "They see \u{201C}\(name) shared these free times.\u{201D}")
                 }
                 Section {
+                    TextField("Your number or email (optional)", text: $replyTo)
+                        .textContentType(.telephoneNumber)
+                        .keyboardType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .submitLabel(.done)
+                } footer: {
+                    Text(replyToFooter)
+                }
+                Section {
                     LabeledContent("Meeting length", value: "\(meetingMinutes) min")
                     LabeledContent("Free times", value: "\(link.choices().count)")
                 } footer: {
-                    Text("They choose up to \(PickReply.maxPicks) times in their own time zone, on iPhone or in any browser, and send them back to you as a reply link that opens here. The times travel inside the links, so nothing passes through a server. Your events stay private; only free times are shared.")
+                    Text("They choose up to \(PickReply.maxPicks) times in their own time zone, on iPhone or in any browser, and send them back to you as a reply link that opens here. The times travel inside the links, so nothing passes through a server. Your events stay private; only free times are shared. Next time, SHARE sends the link straight away; press and hold it to come back here.")
                 }
             }
             .navigationTitle("Pick-a-Time Link")
@@ -706,7 +766,7 @@ struct PickLinkSheet: View {
                     Button("Cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    ShareLink(item: link.url, message: Text("Pick the times that work for you:")) {
+                    ShareLink(item: link.url, message: Text(Self.message)) {
                         Text("Share")
                     }
                     .disabled(link.slots.isEmpty)

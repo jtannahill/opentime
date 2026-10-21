@@ -41,10 +41,27 @@ function validZone(zone) {
   }
 }
 
+/// Reads a reply-to phone number or email the way PickLink.ReplyTo does:
+/// an address with one @ and a dot after it, or 5 to 15 digits with the usual
+/// punctuation (tidied to digits, keeping a leading +). Anything else is null.
+export function cleanReplyTo(text) {
+  if (typeof text !== "string") return null;
+  const t = text.trim();
+  if (!t || t.length > 80) return null;
+  if (t.includes("@")) {
+    const parts = t.split("@");
+    if (parts.length !== 2 || !parts[0] || !parts[1].includes(".") || /\s/.test(t)) return null;
+    return t;
+  }
+  const digits = t.replace(/\D/g, "");
+  if (digits.length < 5 || digits.length > 15 || !/^[\d+\-(). ]+$/.test(t)) return null;
+  return (t.startsWith("+") ? "+" : "") + digits;
+}
+
 /// Builds a link from free stretches. Each stretch is { start, end } as ISO
 /// 8601 strings with an offset or Z. Stretches shorter than the meeting are
 /// left out, as the app does.
-export function createLink({ freeTimes, meetingMinutes = 30, name = null, timeZone = "UTC" }) {
+export function createLink({ freeTimes, meetingMinutes = 30, name = null, timeZone = "UTC", replyTo = null }) {
   const d = Math.round(Number(meetingMinutes));
   if (!(d >= 5 && d <= 480)) throw new Error("meeting_minutes must be between 5 and 480.");
   if (!Array.isArray(freeTimes) || freeTimes.length === 0) throw new Error("free_times needs at least one { start, end }.");
@@ -67,9 +84,15 @@ export function createLink({ freeTimes, meetingMinutes = 30, name = null, timeZo
   const wire = { v: 1, z: zone, d, s: slots.slice(0, MAX_SLOTS) };
   const n = cleanName(name);
   if (n) wire.n = n;
+  if (replyTo != null && String(replyTo).trim()) {
+    const r = cleanReplyTo(String(replyTo));
+    if (!r) throw new Error("reply_to must be a phone number or an email address.");
+    wire.r = r;
+  }
   const json = new TextEncoder().encode(JSON.stringify(wire));
   return {
     url: `https://${HOST}${PATH}#${base64url(json)}`,
+    replyTo: wire.r ?? null,
     slots: wire.s.length,
     dropped: Math.max(0, slots.length - MAX_SLOTS),
     skipped,
@@ -102,6 +125,7 @@ export function readLink(url, now = Date.now()) {
   choices.sort((a, b) => a - b);
   return {
     name: cleanName(wire.n),
+    replyTo: cleanReplyTo(wire.r),
     senderTimeZone: validZone(wire.z) || "UTC",
     meetingMinutes: d,
     freeTimes: slots.map((s) => ({ start: new Date(s.start).toISOString(), end: new Date(s.start + s.minutes * 60000).toISOString() })),

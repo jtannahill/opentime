@@ -12,7 +12,7 @@ $0.99, once. No subscription, no account. iPhone, iPad and Apple Watch. [lulls.a
   <img src=".github/readme/reply.jpg" width="32%" alt="Times Picked: Maya picked 3 times, each with Confirm this time and Add to Calendar">
 </p>
 
-**You choose** the days, the meeting length and, if you like, your first name. **They pick** up to five times in their own time zone, in an App Clip on iPhone or in any browser, with nothing to install, and send them back. **You confirm** one in OpenTime and it goes on your calendar.
+**You choose** the days, the meeting length and, if you like, your first name and where their reply should go. **They pick** up to five times in their own time zone, in an App Clip on iPhone or in any browser, with nothing to install, and send them back. **You confirm** one in OpenTime with one tap: it goes on your calendar and the share sheet opens with their confirmation.
 
 No more typing a list of times into a message that goes stale the moment either calendar moves, and no booking page that asks them to make an account.
 
@@ -65,7 +65,7 @@ The Home Screen widget, a Live Activity and the Dynamic Island, Apple Watch, the
 
 ## Nothing leaves the phone
 
-The app makes no network connections. There is no account, no analytics and no tracking. A pick-a-time link carries only the free times you chose, in the part of the URL a browser never sends to a server, and a reply carries only the times they picked.
+The app makes no network connections. There is no account, no analytics and no tracking. A pick-a-time link carries only the free times you chose, plus a first name and a number or email for their reply if you add them, in the part of the URL a browser never sends to a server, and a reply carries only the times they picked.
 
 ## Build it yourself
 

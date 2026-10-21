@@ -5,13 +5,19 @@ import SwiftUI
 /// way to confirm it and put it on the calendar.
 public struct PickReplyView: View {
     public let reply: PickReply?
+    /// Saves a meeting straight to the calendar, for an app that already has
+    /// calendar access. With it, Confirm is one tap: the event is saved and
+    /// the share sheet opens with the confirmation. Without it, Confirm opens
+    /// the system new-event sheet instead.
+    public var save: (@MainActor (_ title: String, _ start: Date, _ end: Date) -> Bool)?
     /// The time whose new-event sheet is open.
     @State private var inviting: Invite?
     /// Times added to the calendar here, so their row can say so.
     @State private var added: Set<Date> = []
 
-    public init(reply: PickReply?) {
+    public init(reply: PickReply?, save: (@MainActor (_ title: String, _ start: Date, _ end: Date) -> Bool)? = nil) {
         self.reply = reply
+        self.save = save
     }
 
     public var body: some View {
@@ -93,7 +99,7 @@ public struct PickReplyView: View {
                 .foregroundStyle(passed ? Theme.muted : Theme.fg)
             if !passed {
                 let title = reply.name.map { "Meeting with \($0)" } ?? "Meeting"
-                let confirm = ConfirmLink(reply: reply, start: start)
+                let confirmLink = ConfirmLink(reply: reply, start: start)
                 let isAdded = added.contains(start)
                 if isAdded {
                     Text("On your calendar. Send \(reply.name ?? "them") the confirmation so it goes on theirs too.")
@@ -103,25 +109,58 @@ public struct PickReplyView: View {
                 HStack(spacing: 10) {
                     #if canImport(EventKitUI)
                     if !isAdded {
-                        Button {
-                            inviting = Invite(title: title, start: start, end: end)
-                        } label: {
-                            actionLabel("Confirm and invite", filled: true)
+                        if let save {
+                            Button {
+                                confirm(title: title, start: start, end: end, link: confirmLink.url, save: save)
+                            } label: {
+                                actionLabel("Confirm", filled: true)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityHint("Adds it to your calendar and opens the share sheet to tell \(reply.name ?? "them")")
+                            Button {
+                                inviting = Invite(title: title, start: start, end: end)
+                            } label: {
+                                actionLabel("Edit and invite", filled: false)
+                            }
+                            .buttonStyle(.plain)
+                        } else {
+                            Button {
+                                inviting = Invite(title: title, start: start, end: end)
+                            } label: {
+                                actionLabel("Confirm and invite", filled: true)
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
                     }
                     #else
                     if let ics = PickTimeView.icsFile(title: title, start: start, end: end) {
                         ShareLink(item: ics) { actionLabel("Add to Calendar", filled: true) }
                     }
                     #endif
-                    ShareLink(item: Self.confirmation(start: start, end: end, link: confirm.url)) {
-                        actionLabel("Send confirmation", filled: isAdded)
+                    if isAdded || save == nil {
+                        ShareLink(item: Self.confirmation(start: start, end: end, link: confirmLink.url)) {
+                            actionLabel("Send confirmation", filled: isAdded)
+                        }
                     }
                 }
             }
         }
         .padding(.bottom, 14)
+    }
+
+    /// One tap: save the meeting, then hand the confirmation to the share
+    /// sheet. If the save fails, fall back to the new-event sheet so the
+    /// tap still gets somewhere.
+    private func confirm(title: String, start: Date, end: Date, link: URL,
+                         save: @MainActor (String, Date, Date) -> Bool) {
+        guard save(title, start, end) else {
+            inviting = Invite(title: title, start: start, end: end)
+            return
+        }
+        added.insert(start)
+        #if canImport(UIKit)
+        SharePresenter.present([Self.confirmation(start: start, end: end, link: link)])
+        #endif
     }
 
     private func actionLabel(_ text: String, filled: Bool) -> some View {
