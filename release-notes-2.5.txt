@@ -1,0 +1,5 @@
+The confirmation goes straight to them.
+
+When someone picks times from your link, they can add their number or email. Confirm then opens a message already addressed to them, with the meeting and a link that adds it to their calendar in one tap. You just press Send.
+
+You see where it will go before you confirm, and Send another way is still there if you would rather use the share sheet.
