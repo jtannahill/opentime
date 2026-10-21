@@ -7,12 +7,12 @@ See when you are free at a glance, and send it as a link the other person picks 
 $0.99, once. No subscription, no account. iPhone, iPad and Apple Watch. [lulls.app](https://lulls.app)
 
 <p>
-  <img src="docs/img/02-link.webp" width="32%" alt="The Pick-a-Time Link sheet: an optional first name, a 30 minute meeting length and 57 free times">
-  <img src=".github/readme/pick.gif" width="32%" alt="The other person taps three times, adds their name and sends them back">
-  <img src=".github/readme/reply.jpg" width="32%" alt="Times Picked: Maya picked 3 times, each with Confirm this time and Add to Calendar">
+  <img src="docs/img/02-link.webp" width="32%" alt="The Pick-a-Time Link sheet: a first name, a phone number for their reply, a 30 minute meeting length and 24 free times">
+  <img src=".github/readme/pick.gif" width="32%" alt="The other person taps three times, adds their name and email and sends them in Messages">
+  <img src=".github/readme/reply.jpg" width="32%" alt="Times Picked: Maya picked 3 times, the confirmation goes to her email, each time with Confirm and Edit and invite">
 </p>
 
-**You choose** the days, the meeting length and, if you like, your first name and where their reply should go. **They pick** up to five times in their own time zone, in an App Clip on iPhone or in any browser, with nothing to install, and send them back. **You confirm** one in OpenTime with one tap: it goes on your calendar and the share sheet opens with their confirmation.
+**You choose** the days, the meeting length and, if you like, your first name and where their reply should go. **They pick** up to five times in their own time zone, in an App Clip on iPhone or in any browser, with nothing to install, and send them back. **You confirm** one in OpenTime with one tap: it goes on your calendar, and their confirmation opens in Messages or Mail, already addressed to them if they added a number or email.
 
 No more typing a list of times into a message that goes stale the moment either calendar moves, and no booking page that asks them to make an account.
 

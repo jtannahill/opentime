@@ -5,7 +5,7 @@ OpenTime is a private iOS, iPadOS, and watchOS app that reads your device calend
 ## Product summary
 
 - Name: OpenTime
-- Version: 2.4
+- Version: 2.5
 - Platforms: iPhone (iOS 26.2+), iPad (iPadOS 26.2+), Apple Watch (watchOS 10+)
 - Price: $0.99, one time
 - App Store: https://apps.apple.com/us/app/opentime/id6760204246
