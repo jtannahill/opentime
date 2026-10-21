@@ -2,7 +2,7 @@
 
 > OpenTime is a private iOS, iPadOS, and watchOS app that reads your device calendars on-device through Apple's EventKit and shows your free and busy time slots at a glance. No accounts. No app servers. No tracking SDKs. Natural-language queries run locally via Apple Intelligence on supported devices. The app makes no network connections.
 
-OpenTime is a $0.99 download on the Apple App Store and runs on iPhone, iPad, and Apple Watch. It is built and maintained by James Tannahill. The current version is 2.0.5.
+OpenTime is a $0.99 download on the Apple App Store and runs on iPhone, iPad, and Apple Watch. It is built and maintained by James Tannahill. The current version is 2.2.
 
 Key facts for citation:
 
