@@ -6,14 +6,14 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<title>Confirmed · Open Time</title>
-<meta name="description" content="A meeting time agreed with Open Time. Add it to your calendar; the time is in the link itself and nothing is sent to a server.">
+<title>Confirmed · OpenTime</title>
+<meta name="description" content="A meeting time agreed with OpenTime. Add it to your calendar; the time is in the link itself and nothing is sent to a server.">
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="It's confirmed">
 <meta property="og:description" content="Add the meeting to your calendar in one tap.">
 <meta property="og:image" content="https://lulls.app/og-image.png">
-<meta property="og:site_name" content="Open Time">
+<meta property="og:site_name" content="OpenTime">
 <style>
   :root {
     --bg: #0a0b0d; --surface: #111317; --border: #1d2026;
@@ -56,7 +56,7 @@
   <h1 id="title">Confirmed</h1>
   <div id="body"></div>
   <footer>
-    <p>The time is inside this link and never reaches a server. Google Calendar and Outlook see it only if you tap their button. Made with <a href="/">Open Time</a> for iPhone.</p>
+    <p>The time is inside this link and never reaches a server. Google Calendar and Outlook see it only if you tap their button. Made with <a href="/">OpenTime</a> for iPhone.</p>
   </footer>
 </main>
 <script>
@@ -114,7 +114,7 @@
   var row = el("div", "actions");
   var apple = el("a", "primary", "Add to Calendar");
   apple.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
-  apple.download = "Open Time meeting.ics";
+  apple.download = "OpenTime meeting.ics";
   var g = el("a", "secondary", "Google Calendar");
   g.href = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(title) +
     "&dates=" + stamp(c.start) + "/" + stamp(end);

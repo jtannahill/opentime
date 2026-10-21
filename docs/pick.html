@@ -6,15 +6,15 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<title>Pick a time · Open Time</title>
+<title>Pick a time · OpenTime</title>
 <meta name="description" content="Choose up to five times from someone's free times and send them back. The times are in the link itself; nothing is sent to a server.">
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="dark">
 <meta name="apple-itunes-app" content="app-id=6760204246, app-clip-bundle-id=com.jamestannahill.CalendarAvailability.Clip, app-clip-display=card">
 <meta property="og:title" content="Pick a time">
-<meta property="og:description" content="Choose the times that suit you. Shared with Open Time.">
+<meta property="og:description" content="Choose the times that suit you. Shared with OpenTime.">
 <meta property="og:image" content="https://lulls.app/og-image.png">
-<meta property="og:site_name" content="Open Time">
+<meta property="og:site_name" content="OpenTime">
 <style>
   :root {
     --bg: #0a0b0d; --surface: #111317; --border: #1d2026;
@@ -65,6 +65,8 @@
     background: var(--bg); border: 1px solid var(--border);
   }
   .bar input::placeholder { color: var(--text-dim); }
+  .bar .field { display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 4px; }
+  .bar .field span { font-weight: 400; color: var(--text-dim); }
   .bar .hint { color: var(--text-dim); font-size: 0.8125rem; margin: -4px 0 10px; }
   .bar input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
   .actions [hidden] { display: none; }
@@ -93,19 +95,21 @@
   <p class="note" id="note"></p>
   <div id="days"></div>
   <footer>
-    <p>The times are inside this link and never reach a server. Made with <a href="/">Open Time</a> for iPhone.</p>
+    <p>The times are inside this link and never reach a server. Made with <a href="/">OpenTime</a> for iPhone.</p>
   </footer>
 </main>
 <div class="bar" id="bar" aria-live="polite">
   <div class="inner">
     <ul id="chosen"></ul>
     <p class="count" id="count"></p>
-    <input id="who" type="text" autocomplete="given-name" maxlength="40" placeholder="Your name (optional)" aria-label="Your name (optional)">
-    <input id="contact" type="text" autocomplete="tel" inputmode="tel" autocapitalize="off" spellcheck="false" maxlength="80" placeholder="Your number or email (optional)" aria-label="Your number or email (optional)" aria-describedby="contact-hint">
+    <label class="field" for="who">Your name <span>(optional)</span></label>
+    <input id="who" type="text" autocomplete="given-name" maxlength="40">
+    <label class="field" for="contact">Your number or email <span>(optional)</span></label>
+    <input id="contact" type="text" autocomplete="tel" inputmode="tel" autocapitalize="off" spellcheck="false" maxlength="80" aria-describedby="contact-hint">
     <p class="hint" id="contact-hint"></p>
     <div class="actions">
       <button class="primary" id="send" type="button">Send my times</button>
-      <a class="secondary" id="ics" download="Open Time meeting.ics" href="#">Add to calendar</a>
+      <a class="secondary" id="ics" download="OpenTime meeting.ics" href="#">Add to calendar</a>
     </div>
     <button class="other" id="other" type="button" hidden>Send another way</button>
   </div>
@@ -164,7 +168,7 @@
   if (!link && !location.hash.slice(1)) {
     // Arrived with no link at all, e.g. from the homepage: explain the page
     // and offer an example built from the next few weekdays.
-    $("lede").textContent = "This is where pick-a-time links from Open Time open, on any device. Choose up to five of someone's free times, then send them back with one tap.";
+    $("lede").textContent = "This is where pick-a-time links from OpenTime open, on any device. Choose up to five of someone's free times, then send them back with one tap.";
     var demo = [], dd = new Date(); dd.setHours(0, 0, 0, 0);
     while (demo.length < 6) {
       dd.setDate(dd.getDate() + 1);

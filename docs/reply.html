@@ -6,14 +6,14 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<title>Times picked · Open Time</title>
-<meta name="description" content="The times someone picked from your Open Time link. The times are in the link itself; nothing is sent to a server.">
+<title>Times picked · OpenTime</title>
+<meta name="description" content="The times someone picked from your OpenTime link. The times are in the link itself; nothing is sent to a server.">
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Times picked">
-<meta property="og:description" content="The times that work for them, picked with Open Time.">
+<meta property="og:description" content="The times that work for them, picked with OpenTime.">
 <meta property="og:image" content="https://lulls.app/og-image.png">
-<meta property="og:site_name" content="Open Time">
+<meta property="og:site_name" content="OpenTime">
 <style>
   :root {
     --bg: #0a0b0d; --surface: #111317; --border: #1d2026;
@@ -62,7 +62,7 @@
   <p class="note" id="note"></p>
   <div id="picks"></div>
   <footer>
-    <p>The times are inside this link and never reach a server. Made with <a href="/">Open Time</a> for iPhone.</p>
+    <p>The times are inside this link and never reach a server. Made with <a href="/">OpenTime</a> for iPhone.</p>
   </footer>
 </main>
 <script>
@@ -182,7 +182,7 @@
         "DTSTART:" + stamp(t), "DTEND:" + stamp(t + len),
         "SUMMARY:" + title.replace(/([,;\\])/g, "\\$1"), "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
       var cal = document.createElement("a"); cal.className = "secondary"; cal.textContent = "Add to calendar";
-      cal.download = "Open Time meeting.ics";
+      cal.download = "OpenTime meeting.ics";
       cal.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
       row.append(ok, cal); sec.append(row);
     }

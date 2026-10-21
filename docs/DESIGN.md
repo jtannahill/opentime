@@ -18,7 +18,7 @@ On this site, the pick-a-time link, with the free times living inside it, become
 
 ## Colors
 
-- `bg` is the page ground and the browser theme colour.
+- `bg` is the page ground and the browser theme colour. The site is dark only, on purpose: most of the page is white app screens, and a dark ground lets them carry the light instead of competing with it.
 - `field` and `field-2` are tone steps for surfaces: the link maker, the "Send a link. They pick." band, and pressed or switched-off controls. Surfaces are separated by tone, never by a line or a shadow.
 - `text` is for headings and all running text. `text-2` is only for secondary notes (hints, the version note, footer links).
 - `accent` appears on the one primary action in each place (the bar's Get it button, Open this link, Copy on the MCP URL in the assistant section, Copy a reply on /pick) and on one field: the privacy band, where text sits in `bg`. Nowhere else.
@@ -30,7 +30,7 @@ System faces only (SF Pro Display for headings, SF Pro Text for body); no web fo
 
 ## Layout
 
-One 1240px column with a fluid gutter. Sections are separated by large vertical space (88 to 176px), never by rules. From 1000px the hero splits into copy and the link maker; from 900px the week section sets the large app picture beside its text. Neighbouring sections use different compositions: split, band with a picture pair, split with a tabbed video frame (the assistant section, linked from the bar as Assistants), heading beside a two-column list, a full accent field with one statement, a question list. The footer closes with the name at full width.
+One 1240px column with a fluid gutter. Sections are separated by large vertical space (88 to 176px), never by rules. Neighbouring sections on the same ground share one gap rather than stacking two paddings. From 1000px the hero splits into copy and the link maker; from 900px the week section sets the large app picture beside its text. Neighbouring sections use different compositions: split, band with a picture pair, split with a tabbed video frame (the assistant section, linked from the bar as Assistants), heading beside a two-column list, a full accent field with one statement, a question list. The footer closes with the name at full width.
 
 ## Imagery
 
@@ -48,4 +48,4 @@ Section parts rise 24px and fade in once as they enter, staggered 60 to 120ms, o
 
 ## Pick-a-time page
 
-`/pick` renders a link's free times from the URL fragment (nothing is fetched): times grouped by day as `surface` buttons, the chosen one in `accent`. Choosing raises a translucent bottom bar (solid under Reduce Transparency, no slide under Reduce Motion) that enters in 280ms and leaves in 180ms, with Copy a reply (primary) and Add to calendar (.ics). A bare `/pick` explains itself and offers an example. It is `noindex`, sends no referrer, and offers the App Clip through a Smart App Banner.
+`/pick` renders a link's free times from the URL fragment (nothing is fetched): times grouped by day as `surface` buttons, the chosen one in `accent`. Choosing raises a translucent bottom bar (solid under Reduce Transparency, no slide under Reduce Motion) that enters in 280ms and leaves in 180ms. It holds the chosen times, two labelled fields (name, and number or email, each marked optional; labels sit above the fields, never in them), the send button (Send in Messages or Mail when the link has a reply-to, otherwise Send my times) and Add to calendar (.ics) for a single pick. A bare `/pick` explains itself and offers an example. It is `noindex`, sends no referrer, and offers the App Clip through a Smart App Banner.

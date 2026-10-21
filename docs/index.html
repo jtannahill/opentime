@@ -158,9 +158,11 @@
   p { max-width: 62ch; text-wrap: pretty; }
   .small { font-size: 0.9375rem; color: var(--text-2); }
   section { padding-block: clamp(88px, 12vw, 176px); }
+  /* Neighbours on the same ground share one gap instead of stacking two. */
+  .hero + .week, .assist + .everywhere { padding-top: 0; scroll-margin-top: clamp(32px, 5vw, 64px); }
 
   /* Header bar: wordmark, two links, one action. */
-  .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 20px; }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 16px; }
   .wordmark { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.125rem; text-decoration: none; }
   .wordmark img { width: 32px; height: 32px; border-radius: 8px; }
   .bar nav { display: flex; align-items: center; gap: 24px; font-size: 0.9375rem; }
@@ -489,7 +491,7 @@
   <section class="privacy" id="privacy" aria-labelledby="privacy-title">
     <div class="wrap">
       <h2 id="privacy-title" class="statement rise">Your calendar is read on your phone and stays there.</h2>
-      <p class="rise" style="--d:80ms">No account, no analytics, no tracking and no network connections from the app. A pick-a-time link carries only the free times you chose, plus a name or a number for their reply if you add one, inside the link itself, and their reply carries only the times they picked, plus a number or email for the confirmation if they add one. <a href="/privacy">Read the privacy policy</a>.</p>
+      <p class="rise" style="--d:80ms">No account, no analytics, no tracking, and the app makes no network connections. A link carries only the free times you chose, plus your first name and a number or email if you add them. Their reply carries only the times they picked, plus their number or email if they add one. <a href="/privacy">Read the privacy policy</a>.</p>
     </div>
   </section>
 
