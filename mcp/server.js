@@ -6,7 +6,7 @@ import { createLink, readLink, readReply, createConfirmation, readConfirmation, 
 
 export const PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"];
 
-const SERVER_INFO = { name: "open-time-pick", title: "Open Time pick-a-time links", version: "1.4.0" };
+const SERVER_INFO = { name: "open-time-pick", title: "Open Time pick-a-time links", version: "1.5.0" };
 
 const INSTRUCTIONS =
   "Open Time pick-a-time links let someone choose up to five meeting times from a set of free times and send them back as a lulls.app/reply link. " +
@@ -15,7 +15,7 @@ const INSTRUCTIONS =
   "Use read_pick_link when someone shares a lulls.app/pick link, to list its times or check them against a calendar, " +
   "or a lulls.app/reply link, to see which times they picked. " +
   "After reading a reply, ask the user which time they want if there is more than one. Then, if you have calendar tools, offer to create the event and invite the other person; " +
-  "either way, offer create_confirmation_link so the user can send them a link that adds the meeting to their calendar in one tap. " +
+  "either way, offer create_confirmation_link so the user can send them a link that adds the meeting to their calendar in one tap; if the reply has a contact, that is where to send it. " +
   "When someone sends the user a lulls.app/pick link, use find_common_times with the user's free time (from their calendar tools or what they told you) " +
   "to see which of its times suit both sides, let the user choose, then use create_reply_link to answer with up to five of them. " +
   "The times travel inside the link; this server stores nothing and cannot see anyone's calendar.";
@@ -120,6 +120,7 @@ export const TOOLS = [
         picks: { type: "array", minItems: 1, maxItems: 5, items: { type: "string" }, description: "Up to five meeting start times from the link, ISO 8601 with an offset or Z." },
         name: { type: "string", maxLength: 40, description: "Optional first name of the user, shown to the sender." },
         time_zone: { type: "string", description: "IANA time zone of the user, shown to the sender as a hint." },
+        contact: { type: "string", maxLength: 80, description: "Optional phone number or email of the user, so the sender's confirmation opens addressed to them. Anyone with the reply link can see it; include it only if the user wants." },
       },
       required: ["url", "picks"],
     },
@@ -179,11 +180,12 @@ export function callTool(name, args = {}, now = Date.now()) {
       );
     }
     if (name === "create_reply_link") {
-      const r = createReply({ url: args.url, picks: args.picks, name: args.name ?? null, timeZone: args.time_zone ?? "UTC" }, now);
+      const r = createReply({ url: args.url, picks: args.picks, name: args.name ?? null, timeZone: args.time_zone ?? "UTC", contact: args.contact ?? null }, now);
       return text(
         `Reply link with ${r.picks.length} time${r.picks.length === 1 ? "" : "s"}${r.forName ? ` for ${r.forName}` : ""}:\n${r.url}\n\n` +
-          "Send it back as is; everything after # is needed. It opens in OpenTime or any browser, with a button to confirm each time.",
-        { url: r.url, picks: r.picks, meeting_minutes: r.meetingMinutes },
+          "Send it back as is; everything after # is needed. It opens in OpenTime or any browser, with a button to confirm each time." +
+          (r.contact ? ` Their confirmation opens addressed to ${r.contact}.` : ""),
+        { url: r.url, picks: r.picks, meeting_minutes: r.meetingMinutes, contact: r.contact },
       );
     }
     if (name === "create_confirmation_link") {
@@ -218,8 +220,9 @@ export function callTool(name, args = {}, now = Date.now()) {
         return text(
           `${who} picked ${r.picks.length} ${r.meetingMinutes}-minute time${r.picks.length === 1 ? "" : "s"}` +
             `${r.forName ? ` for ${r.forName}` : ""} (shown in ${zone}; picker in ${r.pickerTimeZone}):\n` +
-            describeChoices(r.picks, r.meetingMinutes, zone),
-          { kind: "reply", name: r.name, for_name: r.forName, meeting_minutes: r.meetingMinutes, picker_time_zone: r.pickerTimeZone, picks: r.picks },
+            describeChoices(r.picks, r.meetingMinutes, zone) +
+            (r.contact ? `\nSend the confirmation to ${r.contact}.` : ""),
+          { kind: "reply", name: r.name, for_name: r.forName, contact: r.contact, meeting_minutes: r.meetingMinutes, picker_time_zone: r.pickerTimeZone, picks: r.picks },
         );
       }
       const r = readLink(args.url, now);

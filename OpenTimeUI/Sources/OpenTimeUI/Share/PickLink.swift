@@ -64,15 +64,21 @@ public struct PickLink: Equatable, Sendable {
         /// A URL that opens Messages or Mail addressed to the sender with the
         /// message and the reply link in the body, leaving only Send to tap.
         public func url(message: String, link: URL) -> URL? {
+            url(body: message + "\n" + link.absoluteString, subject: "Times that work for me")
+        }
+
+        /// A URL that opens Messages or Mail addressed here with `body`
+        /// already written. The subject is for Mail only.
+        public func url(body: String, subject: String) -> URL? {
             var allowed = CharacterSet.alphanumerics
             allowed.insert(charactersIn: "-._~")
-            let body = (message + "\n" + link.absoluteString).addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
+            let body = body.addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
             switch self {
             case .phone(let n):
                 // "?&body=" is the form both iOS and Android accept.
                 return URL(string: "sms:\(n)?&body=\(body)")
             case .email(let e):
-                let subject = "Times that work for me".addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
+                let subject = subject.addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
                 return URL(string: "mailto:\(e)?subject=\(subject)&body=\(body)")
             }
         }
@@ -205,9 +211,14 @@ public struct PickReply: Equatable, Sendable {
     public let meetingMinutes: Int
     /// Meeting start times, earliest first, at most `maxPicks`.
     public let picks: [Date]
+    /// Optional phone number or email of the person who picked, so the
+    /// confirmation can go straight back to them.
+    public let contact: PickLink.ReplyTo?
 
-    public init(name: String?, forName: String?, timeZoneID: String, meetingMinutes: Int, picks: [Date]) {
+    public init(name: String?, forName: String?, timeZoneID: String, meetingMinutes: Int, picks: [Date],
+                contact: PickLink.ReplyTo? = nil) {
         self.name = PickLink.clean(name)
+        self.contact = contact
         self.forName = PickLink.clean(forName)
         self.timeZoneID = timeZoneID
         self.meetingMinutes = meetingMinutes
@@ -217,9 +228,10 @@ public struct PickReply: Equatable, Sendable {
     }
 
     /// A reply to `link` with the chosen start times.
-    public init(link: PickLink, picks: [Date], name: String?, timeZone: TimeZone = .current) {
+    public init(link: PickLink, picks: [Date], name: String?, contact: PickLink.ReplyTo? = nil,
+                timeZone: TimeZone = .current) {
         self.init(name: name, forName: link.name, timeZoneID: timeZone.identifier,
-                  meetingMinutes: link.meetingMinutes, picks: picks)
+                  meetingMinutes: link.meetingMinutes, picks: picks, contact: contact)
     }
 
     private struct Wire: Codable {
@@ -230,11 +242,13 @@ public struct PickReply: Equatable, Sendable {
         var d: Int
         /// Start times in minutes since 1970.
         var p: [Int]
+        /// The picker's phone number or email, if given.
+        var r: String?
     }
 
     public var url: URL {
         let wire = Wire(v: 1, n: name, f: forName, z: timeZoneID, d: meetingMinutes,
-                        p: picks.map { Int($0.timeIntervalSince1970 / 60) })
+                        p: picks.map { Int($0.timeIntervalSince1970 / 60) }, r: contact?.text)
         let data = (try? JSONEncoder().encode(wire)) ?? Data()
         var c = URLComponents()
         c.scheme = "https"
@@ -254,7 +268,8 @@ public struct PickReply: Equatable, Sendable {
         self.init(name: wire.n, forName: wire.f,
                   timeZoneID: TimeZone(identifier: wire.z)?.identifier ?? "UTC",
                   meetingMinutes: wire.d,
-                  picks: wire.p.prefix(Self.maxPicks).map { Date(timeIntervalSince1970: TimeInterval($0 * 60)) })
+                  picks: wire.p.prefix(Self.maxPicks).map { Date(timeIntervalSince1970: TimeInterval($0 * 60)) },
+                  contact: PickLink.ReplyTo(wire.r))
     }
 }
 

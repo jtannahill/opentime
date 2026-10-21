@@ -65,6 +65,7 @@
     background: var(--bg); border: 1px solid var(--border);
   }
   .bar input::placeholder { color: var(--text-dim); }
+  .bar .hint { color: var(--text-dim); font-size: 0.8125rem; margin: -4px 0 10px; }
   .bar input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
   .actions [hidden] { display: none; }
   .actions { display: flex; gap: 10px; }
@@ -100,6 +101,8 @@
     <ul id="chosen"></ul>
     <p class="count" id="count"></p>
     <input id="who" type="text" autocomplete="given-name" maxlength="40" placeholder="Your name (optional)" aria-label="Your name (optional)">
+    <input id="contact" type="text" autocomplete="tel" inputmode="tel" autocapitalize="off" spellcheck="false" maxlength="80" placeholder="Your number or email (optional)" aria-label="Your number or email (optional)" aria-describedby="contact-hint">
+    <p class="hint" id="contact-hint"></p>
     <div class="actions">
       <button class="primary" id="send" type="button">Send my times</button>
       <a class="secondary" id="ics" download="Open Time meeting.ics" href="#">Add to calendar</a>
@@ -227,11 +230,27 @@
   $("who").addEventListener("input", function () {
     try { localStorage.setItem("pickReplyName", $("who").value); } catch (e) {}
   });
+  // AutoFill offers whichever the link's own reply-to is, since that is the way they are about to send.
+  if (link.replyTo && link.replyTo.kind === "email") { $("contact").autocomplete = "email"; $("contact").inputMode = "email"; }
+  try { $("contact").value = localStorage.getItem("pickReplyContact") || ""; } catch (e) {}
+  function contactHint() {
+    var typed = $("contact").value.trim();
+    $("contact-hint").textContent = typed && !replyTo(typed)
+      ? "That is not a phone number or email, so it is left out."
+      : "So " + (link.name || "they") + " can send the confirmation straight to you.";
+  }
+  contactHint();
+  $("contact").addEventListener("input", function () {
+    try { localStorage.setItem("pickReplyContact", $("contact").value); } catch (e) {}
+    contactHint();
+  });
   function replyURL() {
     var wire = { v: 1, z: here, d: link.minutes, p: selected.map(function (t) { return Math.round(t / 60000); }) };
     var who = $("who").value.trim().slice(0, 40);
     if (who) wire.n = who;
     if (link.name) wire.f = link.name;
+    var contact = replyTo($("contact").value);
+    if (contact) wire.r = contact.to;
     return location.origin + "/reply#" + b64url(JSON.stringify(wire));
   }
   function toggle(t) {

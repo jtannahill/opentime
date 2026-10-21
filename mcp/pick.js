@@ -150,6 +150,7 @@ export function readReply(url) {
   return {
     name: cleanName(wire.n),
     forName: cleanName(wire.f),
+    contact: cleanReplyTo(wire.r),
     pickerTimeZone: validZone(wire.z) || "UTC",
     meetingMinutes: wire.d,
     picks: picks.map((m) => new Date(m * 60000).toISOString()),
@@ -212,7 +213,7 @@ function parseStretches(list, label) {
 
 /// Answers a pick-a-time link on someone's behalf: up to five of the link's
 /// meeting times, as the lulls.app/reply link the page itself would make.
-export function createReply({ url, picks, name = null, timeZone = "UTC" }, now = Date.now()) {
+export function createReply({ url, picks, name = null, timeZone = "UTC", contact = null }, now = Date.now()) {
   const link = readLink(url, now);
   if (!Array.isArray(picks) || !picks.length) throw new Error("picks needs at least one start time from the link.");
   const offered = new Set(link.choices.map((c) => Date.parse(c)));
@@ -229,7 +230,12 @@ export function createReply({ url, picks, name = null, timeZone = "UTC" }, now =
   const n = cleanName(name);
   if (n) wire.n = n;
   if (link.name) wire.f = link.name;
-  return { url: `https://${HOST}${REPLY_PATH}#` + base64url(new TextEncoder().encode(JSON.stringify(wire))), picks: chosen.map((t) => new Date(t).toISOString()), meetingMinutes: link.meetingMinutes, forName: link.name };
+  if (contact != null && String(contact).trim()) {
+    const r = cleanReplyTo(String(contact));
+    if (!r) throw new Error("contact must be a phone number or an email address.");
+    wire.r = r;
+  }
+  return { url: `https://${HOST}${REPLY_PATH}#` + base64url(new TextEncoder().encode(JSON.stringify(wire))), picks: chosen.map((t) => new Date(t).toISOString()), meetingMinutes: link.meetingMinutes, forName: link.name, contact: wire.r ?? null };
 }
 
 /// The meeting times that suit both sides: the times on offer (from a pick

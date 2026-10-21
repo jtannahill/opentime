@@ -75,6 +75,19 @@
     name = name.trim();
     return name ? name.slice(0, 40) : null;
   }
+  // Mirrors PickLink.ReplyTo: an email, or a phone number tidied to digits.
+  function replyTo(t) {
+    if (typeof t !== "string") return null;
+    t = t.trim();
+    if (!t || t.length > 80) return null;
+    if (t.indexOf("@") >= 0) {
+      var parts = t.split("@");
+      return parts.length === 2 && parts[0] && parts[1].indexOf(".") > 0 && !/\s/.test(t) ? { kind: "email", to: t } : null;
+    }
+    var digits = t.replace(/\D/g, "");
+    if (digits.length < 5 || digits.length > 15 || !/^[\d+\-(). ]+$/.test(t)) return null;
+    return { kind: "phone", to: (t.charAt(0) === "+" ? "+" : "") + digits };
+  }
   function decode(fragment) {
     try {
       var b = fragment.replace(/-/g, "+").replace(/_/g, "/");
@@ -85,7 +98,7 @@
       var picks = w.p.filter(function (m) { return typeof m === "number" && isFinite(m); }).slice(0, MAX)
         .map(function (m) { return m * 60000; }).sort(function (a, b) { return a - b; });
       if (!picks.length) return null;
-      return { name: clean(w.n), forName: clean(w.f), zone: w.z, minutes: w.d, picks: picks };
+      return { name: clean(w.n), forName: clean(w.f), contact: replyTo(w.r), zone: w.z, minutes: w.d, picks: picks };
     } catch (e) { return null; }
   }
   var reply = decode(location.hash.slice(1));
@@ -112,7 +125,15 @@
   $("lede").textContent = reply.minutes + " minutes" + (reply.forName ? " with " + reply.forName : "") + "." +
     (reply.picks.length > 1 ? " Confirm the one you want." : "");
   $("note").textContent = "Times are in your time zone (" + zoneName(here) + ")." +
-    (reply.zone && zoneName(reply.zone) !== zoneName(here) ? " They are in " + zoneName(reply.zone) + "." : "");
+    (reply.zone && zoneName(reply.zone) !== zoneName(here) ? " They are in " + zoneName(reply.zone) + "." : "") +
+    (reply.contact ? " Confirming sends it to " + reply.contact.to + " in " + (reply.contact.kind === "phone" ? "Messages" : "Mail") + "." : "");
+  // Messages or Mail, already addressed to them with the confirmation written.
+  function directURL(text) {
+    var c = reply.contact, body = encodeURIComponent(text);
+    if (!c) return null;
+    return c.kind === "phone" ? "sms:" + c.to + "?&body=" + body
+      : "mailto:" + c.to + "?subject=" + encodeURIComponent("Meeting confirmed") + "&body=" + body;
+  }
 
   var len = reply.minutes * 60000, now = Date.now();
   var today = new Date(); today = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
@@ -147,6 +168,8 @@
       var ok = document.createElement("button"); ok.type = "button"; ok.className = "primary"; ok.textContent = "Confirm this time";
       var text = dayName(t) + ", " + dateFmt.format(t) + " at " + timeFmt.format(t) + " – " + timeFmt.format(t + len) + zoneAbbr(t) + " it is. See you then. Add it to your calendar: " + confirmURL(t);
       ok.addEventListener("click", function () {
+        var direct = directURL(text);
+        if (direct) { location.href = direct; return; }
         if (navigator.share) { navigator.share({ text: text }).catch(function () {}); return; }
         (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () {
           ok.textContent = "Copied";

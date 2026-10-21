@@ -6,12 +6,7 @@ import UIKit
 @MainActor
 public enum SharePresenter {
     public static func present(_ items: [Any]) {
-        guard let scene = UIApplication.shared.connectedScenes
-                .compactMap({ $0 as? UIWindowScene })
-                .first(where: { $0.activationState == .foregroundActive }),
-              let root = scene.keyWindow?.rootViewController else { return }
-        var top = root
-        while let next = top.presentedViewController, !next.isBeingDismissed { top = next }
+        guard let top = topViewController() else { return }
         let vc = UIActivityViewController(activityItems: items, applicationActivities: nil)
         // iPad shows the sheet as a popover, which needs somewhere to point.
         if let pop = vc.popoverPresentationController {
@@ -20,6 +15,17 @@ public enum SharePresenter {
             pop.permittedArrowDirections = .up
         }
         top.present(vc, animated: true)
+    }
+
+    /// The view controller at the front of the active window, to present from.
+    static func topViewController() -> UIViewController? {
+        guard let scene = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first(where: { $0.activationState == .foregroundActive }),
+              let root = scene.keyWindow?.rootViewController else { return nil }
+        var top = root
+        while let next = top.presentedViewController, !next.isBeingDismissed { top = next }
+        return top
     }
 }
 #endif

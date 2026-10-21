@@ -11,6 +11,7 @@ public struct PickTimeView: View {
     @State private var selected: [Date] = []
     @State private var limitHint = 0
     @AppStorage("pickReplyName") private var replyName = ""
+    @AppStorage("pickReplyContact") private var replyContact = ""
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public init(link: PickLink?, footer: AnyView? = nil) {
@@ -129,7 +130,8 @@ public struct PickTimeView: View {
     }
 
     private func choiceBar(_ picks: [Date], link: PickLink) -> some View {
-        let reply = PickReply(link: link, picks: picks, name: replyName)
+        let contact = PickLink.ReplyTo(replyContact)
+        let reply = PickReply(link: link, picks: picks, name: replyName, contact: contact)
         return VStack(alignment: .leading, spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
                 ForEach(picks, id: \.self) { t in
@@ -151,6 +153,14 @@ public struct PickTimeView: View {
                 .padding(.horizontal, 12)
                 .frame(minHeight: 44)
                 .overlay(Rectangle().stroke(Theme.rule, lineWidth: 1))
+            VStack(alignment: .leading, spacing: 4) {
+                contactField(link)
+                Text(contact == nil && !replyContact.trimmingCharacters(in: .whitespaces).isEmpty
+                     ? "That is not a phone number or email, so it is left out."
+                     : "So \(link.name ?? "they") can send the confirmation straight to you.")
+                    .font(Theme.Font.display(size: 12, relativeTo: .caption))
+                    .foregroundStyle(Theme.muted)
+            }
             let direct = link.replyTo.flatMap { to in
                 to.url(message: Self.replyMessage(picks.count), link: reply.url).map { (to, $0) }
             }
@@ -191,6 +201,28 @@ public struct PickTimeView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(.bar)
         .overlay(alignment: .top) { Rectangle().fill(Theme.rule).frame(height: 1) }
+    }
+
+    /// Their number or email. AutoFill offers whichever the link's own
+    /// reply-to is, since that is the way they are about to send.
+    @ViewBuilder
+    private func contactField(_ link: PickLink) -> some View {
+        let field = TextField("Your number or email (optional)", text: $replyContact)
+            .font(Theme.Font.display(size: 15, relativeTo: .body))
+            .autocorrectionDisabled()
+            .submitLabel(.done)
+            .padding(.horizontal, 12)
+            .frame(minHeight: 44)
+            .overlay(Rectangle().stroke(Theme.rule, lineWidth: 1))
+        #if canImport(UIKit)
+        if case .email = link.replyTo {
+            field.textContentType(.emailAddress).keyboardType(.emailAddress).textInputAutocapitalization(.never)
+        } else {
+            field.textContentType(.telephoneNumber).keyboardType(.numbersAndPunctuation).textInputAutocapitalization(.never)
+        }
+        #else
+        field
+        #endif
     }
 
     private func actionLabel(_ text: String, filled: Bool) -> some View {

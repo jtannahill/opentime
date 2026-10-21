@@ -168,3 +168,22 @@ test("a reply-to number or address rides in the link and reads back", () => {
   assert.match(r.result.content[0].text, /Messages/);
   assert.equal(readLink(r.result.structuredContent.url, NOW).replyTo, "+12125550199");
 });
+
+test("the picker's number or email rides in the reply, for the confirmation", () => {
+  const free = [{ start: "2026-10-20T13:00:00-04:00", end: "2026-10-20T15:00:00-04:00" }];
+  const link = createLink({ freeTimes: free, name: "Jamie" }).url;
+  const call = (args) => handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "create_reply_link", arguments: args } }, NOW);
+  const made = call({ url: link, picks: ["2026-10-20T17:00:00Z"], name: "Maya", contact: "maya@example.com" });
+  assert.equal(made.result.structuredContent.contact, "maya@example.com");
+  assert.match(made.result.content[0].text, /addressed to maya@example\.com/);
+  assert.equal(readReply(made.result.structuredContent.url).contact, "maya@example.com");
+  const read = handleMessage({ jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: "read_pick_link", arguments: { url: made.result.structuredContent.url } } }, NOW);
+  assert.equal(read.result.structuredContent.contact, "maya@example.com");
+  assert.match(read.result.content[0].text, /Send the confirmation to maya@example\.com/);
+  const plain = call({ url: link, picks: ["2026-10-20T17:00:00Z"] });
+  assert.equal(readReply(plain.result.structuredContent.url).contact, null);
+  assert.ok(call({ url: link, picks: ["2026-10-20T17:00:00Z"], contact: "call me" }).result.isError, "junk is refused, not sent");
+  // A reply made by the app or the page reads the same way.
+  const wire = { v: 1, z: "UTC", d: 30, p: [29883480], r: "(212) 555-0199" };
+  assert.equal(readReply("https://lulls.app/reply#" + Buffer.from(JSON.stringify(wire)).toString("base64url")).contact, "2125550199");
+});

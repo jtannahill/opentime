@@ -65,7 +65,7 @@ The Home Screen widget, a Live Activity and the Dynamic Island, Apple Watch, the
 
 ## Nothing leaves the phone
 
-The app makes no network connections. There is no account, no analytics and no tracking. A pick-a-time link carries only the free times you chose, plus a first name and a number or email for their reply if you add them, in the part of the URL a browser never sends to a server, and a reply carries only the times they picked.
+The app makes no network connections. There is no account, no analytics and no tracking. A pick-a-time link carries only the free times you chose, plus a first name and a number or email for their reply if you add them, in the part of the URL a browser never sends to a server, and a reply carries only the times they picked, plus their number or email for the confirmation if they add one.
 
 ## Build it yourself
 

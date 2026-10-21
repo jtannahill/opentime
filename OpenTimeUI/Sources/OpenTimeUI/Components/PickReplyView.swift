@@ -14,6 +14,8 @@ public struct PickReplyView: View {
     @State private var inviting: Invite?
     /// Times added to the calendar here, so their row can say so.
     @State private var added: Set<Date> = []
+    /// Times whose confirmation went to them from here.
+    @State private var sent: Set<Date> = []
 
     public init(reply: PickReply?, save: (@MainActor (_ title: String, _ start: Date, _ end: Date) -> Bool)? = nil) {
         self.reply = reply
@@ -74,6 +76,11 @@ public struct PickReplyView: View {
             Text(Self.zoneNote(reply))
                 .font(Theme.Font.display(size: 13, relativeTo: .footnote))
                 .foregroundStyle(Theme.muted)
+            if let contact = reply.contact {
+                Text("Confirming sends it to \(contact.text) in \(contact.appName).")
+                    .font(Theme.Font.display(size: 13, relativeTo: .footnote))
+                    .foregroundStyle(Theme.muted)
+            }
         }
         .padding(.top, 16)
         .padding(.bottom, 20)
@@ -101,8 +108,13 @@ public struct PickReplyView: View {
                 let title = reply.name.map { "Meeting with \($0)" } ?? "Meeting"
                 let confirmLink = ConfirmLink(reply: reply, start: start)
                 let isAdded = added.contains(start)
-                if isAdded {
-                    Text("On your calendar. Send \(reply.name ?? "them") the confirmation so it goes on theirs too.")
+                let who = reply.name ?? "them"
+                if sent.contains(start) {
+                    Text("On your calendar, and the confirmation went to \(who).")
+                        .font(Theme.Font.display(size: 13, relativeTo: .footnote))
+                        .foregroundStyle(Theme.muted)
+                } else if isAdded {
+                    Text("On your calendar. Send \(who) the confirmation so it goes on theirs too.")
                         .font(Theme.Font.display(size: 13, relativeTo: .footnote))
                         .foregroundStyle(Theme.muted)
                 }
@@ -111,12 +123,15 @@ public struct PickReplyView: View {
                     if !isAdded {
                         if let save {
                             Button {
-                                confirm(title: title, start: start, end: end, link: confirmLink.url, save: save)
+                                confirm(title: title, start: start, end: end, link: confirmLink.url,
+                                        contact: reply.contact, save: save)
                             } label: {
                                 actionLabel("Confirm", filled: true)
                             }
                             .buttonStyle(.plain)
-                            .accessibilityHint("Adds it to your calendar and opens the share sheet to tell \(reply.name ?? "them")")
+                            .accessibilityHint(reply.contact.map {
+                                "Adds it to your calendar and opens \($0.appName) addressed to \(who)"
+                            } ?? "Adds it to your calendar and opens the share sheet to tell \(who)")
                             Button {
                                 inviting = Invite(title: title, start: start, end: end)
                             } label: {
@@ -138,9 +153,38 @@ public struct PickReplyView: View {
                     }
                     #endif
                     if isAdded || save == nil {
-                        ShareLink(item: Self.confirmation(start: start, end: end, link: confirmLink.url)) {
+                        let text = Self.confirmation(start: start, end: end, link: confirmLink.url)
+                        #if canImport(MessageUI)
+                        if let contact = reply.contact {
+                            Button {
+                                ComposePresenter.present(to: contact, body: text, subject: Self.subject) {
+                                    sent.insert(start)
+                                }
+                            } label: {
+                                actionLabel("Send confirmation", filled: isAdded && !sent.contains(start))
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityHint("Opens \(contact.appName) addressed to \(who)")
+                        } else {
+                            ShareLink(item: text) {
+                                actionLabel("Send confirmation", filled: isAdded)
+                            }
+                        }
+                        #else
+                        ShareLink(item: text) {
                             actionLabel("Send confirmation", filled: isAdded)
                         }
+                        #endif
+                    }
+                }
+                if isAdded, reply.contact != nil {
+                    ShareLink(item: Self.confirmation(start: start, end: end, link: confirmLink.url)) {
+                        Text("Send another way")
+                            .font(Theme.Font.display(size: 13, weight: .medium, relativeTo: .footnote))
+                            .underline()
+                            .foregroundStyle(Theme.muted)
+                            .frame(minHeight: 44)
+                            .contentShape(Rectangle())
                     }
                 }
             }
@@ -148,18 +192,26 @@ public struct PickReplyView: View {
         .padding(.bottom, 14)
     }
 
-    /// One tap: save the meeting, then hand the confirmation to the share
-    /// sheet. If the save fails, fall back to the new-event sheet so the
-    /// tap still gets somewhere.
-    private func confirm(title: String, start: Date, end: Date, link: URL,
+    /// One tap: save the meeting, then send the confirmation: addressed to
+    /// them when the reply says where, otherwise through the share sheet.
+    /// If the save fails, fall back to the new-event sheet so the tap still
+    /// gets somewhere.
+    private func confirm(title: String, start: Date, end: Date, link: URL, contact: PickLink.ReplyTo?,
                          save: @MainActor (String, Date, Date) -> Bool) {
         guard save(title, start, end) else {
             inviting = Invite(title: title, start: start, end: end)
             return
         }
         added.insert(start)
+        let text = Self.confirmation(start: start, end: end, link: link)
+        #if canImport(MessageUI)
+        if let contact {
+            ComposePresenter.present(to: contact, body: text, subject: Self.subject) { sent.insert(start) }
+            return
+        }
+        #endif
         #if canImport(UIKit)
-        SharePresenter.present([Self.confirmation(start: start, end: end, link: link)])
+        SharePresenter.present([text])
         #endif
     }
 
@@ -177,6 +229,8 @@ public struct PickReplyView: View {
     }
 
     // MARK: - Logic
+
+    static let subject = "Meeting confirmed"
 
     static func headline(_ reply: PickReply) -> String {
         let who = reply.name ?? "They"

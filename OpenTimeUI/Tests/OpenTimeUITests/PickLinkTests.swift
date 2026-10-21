@@ -173,3 +173,30 @@ import Testing
         #expect(PickLink.ReplyTo.email("sam@example.com").appName == "Mail")
     }
 }
+
+@Suite struct ReplyContactTests {
+    let base = Date(timeIntervalSince1970: 1_792_400_400)
+
+    @Test func theirNumberRidesInTheReplyAndComesBack() {
+        let link = PickLink(name: "Jamie", timeZoneID: "UTC", meetingMinutes: 30, slots: [.init(start: base, minutes: 60)])
+        let reply = PickReply(link: link, picks: [base], name: "Maya", contact: .email("maya@example.com"))
+        #expect(PickReply(url: reply.url)?.contact == .email("maya@example.com"))
+        let plain = PickReply(link: link, picks: [base], name: "Maya")
+        #expect(PickReply(url: plain.url)?.contact == nil)
+        #expect(!plain.url.fragment!.contains("\"r\""), "no field at all when they leave it out")
+    }
+
+    @Test func junkContactInAReplyIsDropped() {
+        let wire = #"{"v":1,"z":"UTC","d":30,"p":[29873400],"r":"call me"}"#
+        let url = URL(string: "https://lulls.app/reply#" + PickLink.base64url(Data(wire.utf8)))!
+        #expect(PickReply(url: url)?.contact == nil)
+        #expect(PickReply(url: url)?.picks.count == 1, "the times still read")
+    }
+
+    @Test func confirmationOpensAddressedWithItsOwnSubject() {
+        let mail = PickLink.ReplyTo.email("maya@example.com").url(body: "See you then.", subject: "Meeting confirmed")
+        #expect(mail?.absoluteString == "mailto:maya@example.com?subject=Meeting%20confirmed&body=See%20you%20then.")
+        let sms = PickLink.ReplyTo.phone("+12125550199").url(body: "See you then.", subject: "ignored")
+        #expect(sms?.absoluteString == "sms:+12125550199?&body=See%20you%20then.")
+    }
+}
